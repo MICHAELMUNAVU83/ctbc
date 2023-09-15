@@ -1,0 +1,56 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="event-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :name %>
+    <%= text_input f, :name %>
+    <%= error_tag f, :name %>
+  
+    <%= label f, :description %>
+    <%= text_input f, :description %>
+    <%= error_tag f, :description %>
+  
+    <%= label f, :date_of_event %>
+    <%= text_input f, :date_of_event %>
+    <%= error_tag f, :date_of_event %>
+  
+    <%= label f, :time_of_starting %>
+    <%= text_input f, :time_of_starting %>
+    <%= error_tag f, :time_of_starting %>
+  
+    <%= label f, :time_of_ending %>
+    <%= text_input f, :time_of_ending %>
+    <%= error_tag f, :time_of_ending %>
+  
+    <%= label f, :type %>
+    <%= text_input f, :type %>
+    <%= error_tag f, :type %>
+  
+    <%= label f, :price %>
+    <%= text_input f, :price %>
+    <%= error_tag f, :price %>
+  
+    <%= label f, :venue %>
+    <%= text_input f, :venue %>
+    <%= error_tag f, :venue %>
+  
+    <%= label f, :image %>
+    <%= text_input f, :image %>
+    <%= error_tag f, :image %>
+  
+    <%= label f, :status %>
+    <%= text_input f, :status %>
+    <%= error_tag f, :status %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>
