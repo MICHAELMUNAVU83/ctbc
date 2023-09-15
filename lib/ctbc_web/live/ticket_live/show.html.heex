@@ -1,0 +1,86 @@
+<h1>Show Ticket</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.ticket_show_path(@socket, :show, @ticket)}>
+    <.live_component
+      module={CtbcWeb.TicketLive.FormComponent}
+      id={@ticket.id}
+      title={@page_title}
+      action={@live_action}
+      ticket={@ticket}
+      return_to={Routes.ticket_show_path(@socket, :show, @ticket)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Ticketid:</strong>
+    <%= @ticket.ticketid %>
+  </li>
+
+  <li>
+    <strong>Quantity:</strong>
+    <%= @ticket.quantity %>
+  </li>
+
+  <li>
+    <strong>Ticket type:</strong>
+    <%= @ticket.ticket_type %>
+  </li>
+
+  <li>
+    <strong>Event type:</strong>
+    <%= @ticket.event_type %>
+  </li>
+
+  <li>
+    <strong>Status:</strong>
+    <%= @ticket.status %>
+  </li>
+
+  <li>
+    <strong>Ticket holder name:</strong>
+    <%= @ticket.ticket_holder_name %>
+  </li>
+
+  <li>
+    <strong>Ticket holder email:</strong>
+    <%= @ticket.ticket_holder_email %>
+  </li>
+
+  <li>
+    <strong>Phone number:</strong>
+    <%= @ticket.phone_number %>
+  </li>
+
+  <li>
+    <strong>Ticket added type:</strong>
+    <%= @ticket.ticket_added_type %>
+  </li>
+
+  <li>
+    <strong>Ticket added by:</strong>
+    <%= @ticket.ticket_added_by %>
+  </li>
+
+  <li>
+    <strong>Promo code name:</strong>
+    <%= @ticket.promo_code_name %>
+  </li>
+
+  <li>
+    <strong>Promo code number:</strong>
+    <%= @ticket.promo_code_number %>
+  </li>
+
+  <li>
+    <strong>Total cost:</strong>
+    <%= @ticket.total_cost %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.ticket_show_path(@socket, :edit, @ticket), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.ticket_index_path(@socket, :index) %></span>

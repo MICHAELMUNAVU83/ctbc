@@ -1,0 +1,28 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="promo_code-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :name_of_influencer %>
+    <%= text_input f, :name_of_influencer %>
+    <%= error_tag f, :name_of_influencer %>
+  
+    <%= label f, :phone_number %>
+    <%= text_input f, :phone_number %>
+    <%= error_tag f, :phone_number %>
+  
+    <%= label f, :promo_code %>
+    <%= text_input f, :promo_code %>
+    <%= error_tag f, :promo_code %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

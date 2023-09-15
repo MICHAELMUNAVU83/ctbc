@@ -27,6 +27,13 @@ defmodule CtbcWeb.Router do
 
     live "/events/:id", EventLive.Show, :show
     live "/events/:id/show/edit", EventLive.Show, :edit
+
+    live "/mpesas", MpesaLive.Index, :index
+    live "/mpesas/new", MpesaLive.Index, :new
+    live "/mpesas/:id/edit", MpesaLive.Index, :edit
+
+    live "/mpesas/:id", MpesaLive.Show, :show
+    live "/mpesas/:id/show/edit", MpesaLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

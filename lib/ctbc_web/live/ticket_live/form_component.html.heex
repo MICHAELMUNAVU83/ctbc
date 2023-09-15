@@ -1,0 +1,68 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="ticket-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :ticketid %>
+    <%= text_input f, :ticketid %>
+    <%= error_tag f, :ticketid %>
+  
+    <%= label f, :quantity %>
+    <%= text_input f, :quantity %>
+    <%= error_tag f, :quantity %>
+  
+    <%= label f, :ticket_type %>
+    <%= text_input f, :ticket_type %>
+    <%= error_tag f, :ticket_type %>
+  
+    <%= label f, :event_type %>
+    <%= text_input f, :event_type %>
+    <%= error_tag f, :event_type %>
+  
+    <%= label f, :status %>
+    <%= text_input f, :status %>
+    <%= error_tag f, :status %>
+  
+    <%= label f, :ticket_holder_name %>
+    <%= text_input f, :ticket_holder_name %>
+    <%= error_tag f, :ticket_holder_name %>
+  
+    <%= label f, :ticket_holder_email %>
+    <%= text_input f, :ticket_holder_email %>
+    <%= error_tag f, :ticket_holder_email %>
+  
+    <%= label f, :phone_number %>
+    <%= text_input f, :phone_number %>
+    <%= error_tag f, :phone_number %>
+  
+    <%= label f, :ticket_added_type %>
+    <%= text_input f, :ticket_added_type %>
+    <%= error_tag f, :ticket_added_type %>
+  
+    <%= label f, :ticket_added_by %>
+    <%= text_input f, :ticket_added_by %>
+    <%= error_tag f, :ticket_added_by %>
+  
+    <%= label f, :promo_code_name %>
+    <%= text_input f, :promo_code_name %>
+    <%= error_tag f, :promo_code_name %>
+  
+    <%= label f, :promo_code_number %>
+    <%= text_input f, :promo_code_number %>
+    <%= error_tag f, :promo_code_number %>
+  
+    <%= label f, :total_cost %>
+    <%= number_input f, :total_cost %>
+    <%= error_tag f, :total_cost %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

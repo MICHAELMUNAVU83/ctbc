@@ -1,0 +1,36 @@
+<h1>Show Promo code</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.promo_code_show_path(@socket, :show, @promo_code)}>
+    <.live_component
+      module={CtbcWeb.PromoCodeLive.FormComponent}
+      id={@promo_code.id}
+      title={@page_title}
+      action={@live_action}
+      promo_code={@promo_code}
+      return_to={Routes.promo_code_show_path(@socket, :show, @promo_code)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name of influencer:</strong>
+    <%= @promo_code.name_of_influencer %>
+  </li>
+
+  <li>
+    <strong>Phone number:</strong>
+    <%= @promo_code.phone_number %>
+  </li>
+
+  <li>
+    <strong>Promo code:</strong>
+    <%= @promo_code.promo_code %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.promo_code_show_path(@socket, :edit, @promo_code), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.promo_code_index_path(@socket, :index) %></span>

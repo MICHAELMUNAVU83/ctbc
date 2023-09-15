@@ -13,7 +13,7 @@ defmodule Ctbc.Events.Event do
     field :time_of_ending, :string
     field :price, :string
     field :venue, :string
-    belongs_to :user, Thekultureke.Users.User
+    belongs_to :user, Ctbc.Users.User
 
     timestamps()
   end

@@ -1,0 +1,46 @@
+<h1>Show Mpesa</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.mpesa_show_path(@socket, :show, @mpesa)}>
+    <.live_component
+      module={CtbcWeb.MpesaLive.FormComponent}
+      id={@mpesa.id}
+      title={@page_title}
+      action={@live_action}
+      mpesa={@mpesa}
+      return_to={Routes.mpesa_show_path(@socket, :show, @mpesa)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Phone number:</strong>
+    <%= @mpesa.phone_number %>
+  </li>
+
+  <li>
+    <strong>No of tickets:</strong>
+    <%= @mpesa.no_of_tickets %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @mpesa.email %>
+  </li>
+
+  <li>
+    <strong>Deliver ticket by:</strong>
+    <%= @mpesa.deliver_ticket_by %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @mpesa.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.mpesa_show_path(@socket, :edit, @mpesa), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.mpesa_index_path(@socket, :index) %></span>

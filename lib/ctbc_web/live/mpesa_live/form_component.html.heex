@@ -1,0 +1,36 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="mpesa-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :phone_number %>
+    <%= text_input f, :phone_number %>
+    <%= error_tag f, :phone_number %>
+  
+    <%= label f, :no_of_tickets %>
+    <%= text_input f, :no_of_tickets %>
+    <%= error_tag f, :no_of_tickets %>
+  
+    <%= label f, :email %>
+    <%= text_input f, :email %>
+    <%= error_tag f, :email %>
+  
+    <%= label f, :deliver_ticket_by %>
+    <%= text_input f, :deliver_ticket_by %>
+    <%= error_tag f, :deliver_ticket_by %>
+  
+    <%= label f, :name %>
+    <%= text_input f, :name %>
+    <%= error_tag f, :name %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

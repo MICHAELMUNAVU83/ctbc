@@ -1,0 +1,43 @@
+<h1>Listing Promo codes</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.promo_code_index_path(@socket, :index)}>
+    <.live_component
+      module={CtbcWeb.PromoCodeLive.FormComponent}
+      id={@promo_code.id || :new}
+      title={@page_title}
+      action={@live_action}
+      promo_code={@promo_code}
+      return_to={Routes.promo_code_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name of influencer</th>
+      <th>Phone number</th>
+      <th>Promo code</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="promo_codes">
+    <%= for promo_code <- @promo_codes do %>
+      <tr id={"promo_code-#{promo_code.id}"}>
+        <td><%= promo_code.name_of_influencer %></td>
+        <td><%= promo_code.phone_number %></td>
+        <td><%= promo_code.promo_code %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.promo_code_show_path(@socket, :show, promo_code) %></span>
+          <span><%= live_patch "Edit", to: Routes.promo_code_index_path(@socket, :edit, promo_code) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: promo_code.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Promo code", to: Routes.promo_code_index_path(@socket, :new) %></span>

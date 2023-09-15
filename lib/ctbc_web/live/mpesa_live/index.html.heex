@@ -1,0 +1,47 @@
+<h1>Listing Mpesas</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.mpesa_index_path(@socket, :index)}>
+    <.live_component
+      module={CtbcWeb.MpesaLive.FormComponent}
+      id={@mpesa.id || :new}
+      title={@page_title}
+      action={@live_action}
+      mpesa={@mpesa}
+      return_to={Routes.mpesa_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Phone number</th>
+      <th>No of tickets</th>
+      <th>Email</th>
+      <th>Deliver ticket by</th>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="mpesas">
+    <%= for mpesa <- @mpesas do %>
+      <tr id={"mpesa-#{mpesa.id}"}>
+        <td><%= mpesa.phone_number %></td>
+        <td><%= mpesa.no_of_tickets %></td>
+        <td><%= mpesa.email %></td>
+        <td><%= mpesa.deliver_ticket_by %></td>
+        <td><%= mpesa.name %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.mpesa_show_path(@socket, :show, mpesa) %></span>
+          <span><%= live_patch "Edit", to: Routes.mpesa_index_path(@socket, :edit, mpesa) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: mpesa.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Mpesa", to: Routes.mpesa_index_path(@socket, :new) %></span>
