@@ -31,23 +31,23 @@ defmodule CtbcWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("ctbc.repo.query.total_time",
+      summary("Ctbc.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
       ),
-      summary("ctbc.repo.query.decode_time",
+      summary("Ctbc.repo.query.decode_time",
         unit: {:native, :millisecond},
         description: "The time spent decoding the data received from the database"
       ),
-      summary("ctbc.repo.query.query_time",
+      summary("Ctbc.repo.query.query_time",
         unit: {:native, :millisecond},
         description: "The time spent executing the query"
       ),
-      summary("ctbc.repo.query.queue_time",
+      summary("Ctbc.repo.query.queue_time",
         unit: {:native, :millisecond},
         description: "The time spent waiting for a database connection"
       ),
-      summary("ctbc.repo.query.idle_time",
+      summary("Ctbc.repo.query.idle_time",
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"

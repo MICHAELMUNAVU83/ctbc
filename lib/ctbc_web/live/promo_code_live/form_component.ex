@@ -41,7 +41,28 @@ defmodule CtbcWeb.PromoCodeLive.FormComponent do
   end
 
   defp save_promo_code(socket, :new, promo_code_params) do
-    case PromoCodes.create_promo_code(promo_code_params) do
+    get_timestamp =
+      Timex.local()
+      |> Timex.format!("{YYYY}{0M}{0D}{h24}{m}{s}")
+
+    last_element = String.at(get_timestamp, String.length(get_timestamp) - 1)
+
+    IO.inspect(SecureRandom.base64(String.to_integer(last_element)))
+
+    uuid =
+      SecureRandom.base64(String.to_integer(last_element))
+      |> String.replace("=", "t")
+      |> String.replace("+", "t")
+      |> String.upcase()
+      |> String.slice(0, 6)
+
+    IO.inspect(uuid)
+
+    new_promo_code_params =
+      promo_code_params
+      |> Map.put("promo_code", uuid)
+
+    case PromoCodes.create_promo_code(new_promo_code_params) do
       {:ok, _promo_code} ->
         {:noreply,
          socket

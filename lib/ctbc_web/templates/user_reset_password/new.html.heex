@@ -1,15 +1,36 @@
-<h1>Forgot your password?</h1>
+<div class="bg-cover bg-center h-[100vh]" style="background-image: url('/images/bg.jpeg')">
+  <div class="flex flex-col h-[100%] justify-center items-center bg-black/50">
+    <div class="bg-white flex flex-col md:w-[400px] w-[320px] min-h-[400px] justify-center items-center ">
+      <h1 class="font-bold text-transparent text-xl  bg-clip-text bg-gradient-to-r from-red-500 to-green-600">
+        Forgot your password?
+      </h1>
 
-<.form let={f} for={:user} action={Routes.user_reset_password_path(@conn, :create)}>
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
+      <.form let={f} for={:user} action={Routes.user_reset_password_path(@conn, :create)}>
+        <div class="flex flex-col w-[100%] gap-2">
+          <%= label(f, :email) %>
+          <%= email_input(f, :email,
+            required: true,
+            class:
+              "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          ) %>
+        </div>
 
-  <div>
-    <%= submit "Send instructions to reset password" %>
+        <div class="flex mt-4 flex-col justify-center items-center gap-2 ">
+          <%= submit("Send instructions to reset password",
+            class:
+              "bg-green-500 flex gap-2 items-center text-white  rounded-md px-4 py-2 hover:scale-105 transition-all ease-in-out duration-500"
+          ) %>
+        </div>
+      </.form>
+
+      <p class="text-sm mt-4 md:text-base">
+        <%= link("Register", to: Routes.user_registration_path(@conn, :new)) %> | <%= link(
+          "Log in",
+          to: Routes.user_session_path(@conn, :new)
+        ) %> | <%= link("Back To Home",
+          to: Routes.page_index_path(@conn, :index)
+        ) %>
+      </p>
+    </div>
   </div>
-</.form>
-
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>
+</div>

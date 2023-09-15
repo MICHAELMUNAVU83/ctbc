@@ -1,12 +1,19 @@
 defmodule CtbcWeb.EventLive.Index do
-  use CtbcWeb, :live_view
+  use CtbcWeb, :dashboard_live_view
 
   alias Ctbc.Events
   alias Ctbc.Events.Event
+  alias Ctbc.Users
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :events, list_events())}
+  def mount(_params, session, socket) do
+    current_user = Users.get_user_by_session_token(session["user_token"])
+
+    {:ok,
+     socket
+     |> assign(:events, list_events())
+     |> assign(:url, "/events")
+     |> assign(:current_user, current_user)}
   end
 
   @impl true

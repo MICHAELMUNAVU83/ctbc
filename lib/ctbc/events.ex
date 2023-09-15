@@ -21,6 +21,13 @@ defmodule Ctbc.Events do
     Repo.all(Event)
   end
 
+  def list_event_promo_codes(id) do
+    Repo.all(Event)
+    |> Enum.filter(fn event -> event.id == id end)
+    |> Repo.preload(:promo_codes)
+    |> Enum.at(0)
+  end
+
   @doc """
   Gets a single event.
 

@@ -6,8 +6,8 @@ defmodule CtbcWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_ctbc_key",
-    signing_salt: "jwMr+hm1"
+    key: "_Ctbc_key",
+    signing_salt: "gqwGbIU5"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

@@ -15,7 +15,9 @@ defmodule Ctbc.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Ctbc.PubSub},
       # Start the Endpoint (http/https)
-      CtbcWeb.Endpoint
+
+      CtbcWeb.Endpoint,
+      {Finch, name: Swoosh.Finch}
       # Start a worker by calling: Ctbc.Worker.start_link(arg)
       # {Ctbc.Worker, arg}
     ]

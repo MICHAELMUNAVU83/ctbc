@@ -18,28 +18,51 @@ defmodule CtbcWeb.Router do
   end
 
   scope "/", CtbcWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
+    pipe_through [:browser, :require_authenticated_user]
     live "/events", EventLive.Index, :index
+
+    live "/system_users", SystemUserLive.Index, :index
     live "/events/new", EventLive.Index, :new
     live "/events/:id/edit", EventLive.Index, :edit
+    live "/tickets", TicketLive.Index, :index
+    live "/tickets/new", TicketLive.Index, :new
+    live "/tickets/:id/edit", TicketLive.Index, :edit
+    live "/tickets/:id/show/edit", TicketLive.Show, :edit
+
+    live "/promo_codes", PromoCodeLive.Index, :index
+    live "/promo_codes/new", PromoCodeLive.Index, :new
+    live "/promo_codes/:id/edit", PromoCodeLive.Index, :edit
+
+    live "/promo_codes/:id", PromoCodeLive.Show, :show
+    live "/promo_codes/:id/show/edit", PromoCodeLive.Show, :edit
+    live "/dashboard", DashboardLive.Index, :index
+    live "/payments", PaymentLive.Index, :index
+
+    post "/export", ExportController, :create
+  end
+
+  scope "/", CtbcWeb do
+    pipe_through :browser
+
+    live "/", PageLive.Index, :index
 
     live "/events/:id", EventLive.Show, :show
-    live "/events/:id/show/edit", EventLive.Show, :edit
+    live "/events/:id/:promo_code_name/:promo_code_number", EventLive.PromoCode, :index
 
-    live "/mpesas", MpesaLive.Index, :index
-    live "/mpesas/new", MpesaLive.Index, :new
-    live "/mpesas/:id/edit", MpesaLive.Index, :edit
+    live "/events/:id/:promo_code_name/:promo_code_number/buyticketpromocode",
+         EventLive.PromoCode,
+         :buyticketpromocode
 
-    live "/mpesas/:id", MpesaLive.Show, :show
-    live "/mpesas/:id/show/edit", MpesaLive.Show, :edit
+    live "/events/:id/buyticket", EventLive.Show, :buyticket
+
+    live "/tickets/:ticketid", TicketLive.Show, :show
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", CtbcWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", CtbcWeb do
+    pipe_through :api
+    resources "/mpesa_transactions", MpesaTransactionController, except: [:new, :edit]
+  end
 
   # Enables LiveDashboard only for development
   #
@@ -53,8 +76,6 @@ defmodule CtbcWeb.Router do
 
     scope "/" do
       pipe_through :browser
-
-      live_dashboard "/dashboard", metrics: CtbcWeb.Telemetry
     end
   end
 

@@ -1,5 +1,3 @@
-<h1>Listing Events</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.event_index_path(@socket, :index)}>
     <.live_component
@@ -8,50 +6,117 @@
       title={@page_title}
       action={@live_action}
       event={@event}
+      current_user={@current_user}
       return_to={Routes.event_index_path(@socket, :index)}
     />
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Date of event</th>
-      <th>Time of starting</th>
-      <th>Time of ending</th>
-      <th>Type</th>
-      <th>Price</th>
-      <th>Venue</th>
-      <th>Image</th>
-      <th>Status</th>
+<div class="flex flex-col w-[100%] gap-2">
+  <div class="flex flex-col gap-1">
+    <div class="flex flex-row items-end justify-between w-[100%]">
+      <p>
+        You have a total of <%= length(@events) %> events
+      </p>
+      <%= live_patch(to: Routes.event_index_path(@socket, :new)) do %>
+        <button class="bg-green-500 flex gap-2 items-center text-white  rounded-md p-2">
+          <%= Heroicons.icon("plus",
+            type: "solid",
+            class: "h-8   font-bold w-8"
+          ) %> New Event
+        </button>
+      <% end %>
+    </div>
+  </div>
+  <div class="bg-white h-[50vh]  rounded-xl p-4 overflow-y-scroll">
+    <table class="w-[100%]">
+      <thead class="border-b-2  border-black">
+        <tr>
+          <th class="p-2 font-semibold text-gray-700">Image</th>
+          <th class="p-2 font-semibold text-gray-700">Name</th>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="events">
-    <%= for event <- @events do %>
-      <tr id={"event-#{event.id}"}>
-        <td><%= event.name %></td>
-        <td><%= event.description %></td>
-        <td><%= event.date_of_event %></td>
-        <td><%= event.time_of_starting %></td>
-        <td><%= event.time_of_ending %></td>
-        <td><%= event.type %></td>
-        <td><%= event.price %></td>
-        <td><%= event.venue %></td>
-        <td><%= event.image %></td>
-        <td><%= event.status %></td>
+          <th class="p-2 font-semibold text-gray-700">Date of event</th>
+          <th class="p-2 font-semibold text-gray-700">Time of starting</th>
+          <th class="p-2 font-semibold text-gray-700">Time of ending</th>
+          <th class="p-2 font-semibold text-gray-700">Type</th>
+          <th class="p-2 font-semibold text-gray-700">Price</th>
+          <th class="p-2 font-semibold text-gray-700">Venue</th>
 
-        <td>
-          <span><%= live_redirect "Show", to: Routes.event_show_path(@socket, :show, event) %></span>
-          <span><%= live_patch "Edit", to: Routes.event_index_path(@socket, :edit, event) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: event.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+          <th class="p-2 font-semibold text-gray-700">Status</th>
 
-<span><%= live_patch "New Event", to: Routes.event_index_path(@socket, :new) %></span>
+          <th class="p-2 font-semibold text-gray-700">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="events">
+        <%= for event <- @events do %>
+          <tr
+            class="border-b-[1px] cursor-pointer text-center hover:bg-blue-100/50 transition-all ease-in-out duration-500  border-black"
+            id={"event-#{event.id}"}
+          >
+            <td class="p-2">
+              <div class="flex fex-col justify-center items-center">
+                <img src="/images/poster.jpeg" class="w-[50px] h-[50px] object-cover " />
+              </div>
+            </td>
+            <td><%= event.name %></td>
+
+            <td><%= event.date_of_event %></td>
+            <td><%= event.time_of_starting %></td>
+            <td><%= event.time_of_ending %></td>
+            <td><%= event.type %></td>
+            <td><%= event.price %></td>
+            <td><%= event.venue %></td>
+
+            <td>
+              <%= if event.status == "Active" do %>
+                <span class="bg-green-500 text-white rounded-md p-1">
+                  <%= event.status %>
+                </span>
+              <% else %>
+                <span class="bg-red-500 text-white rounded-md p-1">
+                  <%= event.status %>
+                </span>
+              <% end %>
+            </td>
+
+            <td>
+              <div class="flex flex-row gap-2 justify-center items-center">
+                <div>
+                  <%= live_redirect(to: Routes.event_show_path(@socket, :show, event)) do %>
+                    <%= Heroicons.icon("eye",
+                      type: "solid",
+                      class: "h-6  group-hover:text-green-600 text-green-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= live_patch(to: Routes.event_index_path(@socket, :edit, event)) do %>
+                    <%= Heroicons.icon("pencil",
+                      type: "solid",
+                      class: "h-6  group-hover:text-blue-600 text-blue-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= link(
+                    to: "#",
+                    phx_click: "delete",
+                    phx_value_id: event.id,
+                    data: [confirm: "Are you sure?"]
+                  )  do %>
+                    <%= Heroicons.icon("trash",
+                      type: "solid",
+                      class: "h-6  group-hover:text-red-600 text-red-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

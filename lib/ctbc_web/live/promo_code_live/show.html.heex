@@ -1,5 +1,3 @@
-<h1>Show Promo code</h1>
-
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.promo_code_show_path(@socket, :show, @promo_code)}>
     <.live_component
@@ -14,7 +12,6 @@
 <% end %>
 
 <ul>
-
   <li>
     <strong>Name of influencer:</strong>
     <%= @promo_code.name_of_influencer %>
@@ -29,8 +26,13 @@
     <strong>Promo code:</strong>
     <%= @promo_code.promo_code %>
   </li>
-
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.promo_code_show_path(@socket, :edit, @promo_code), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.promo_code_index_path(@socket, :index) %></span>
+<span>
+  <%= live_patch("Edit",
+    to: Routes.promo_code_show_path(@socket, :edit, @promo_code),
+    class: "button"
+  ) %>
+</span>
+|
+<span><%= live_redirect("Back", to: Routes.promo_code_index_path(@socket, :index)) %></span>

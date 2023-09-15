@@ -41,6 +41,8 @@ defmodule CtbcWeb.EventLive.FormComponent do
   end
 
   defp save_event(socket, :new, event_params) do
+    IO.inspect(event_params)
+
     case Events.create_event(event_params) do
       {:ok, _event} ->
         {:noreply,

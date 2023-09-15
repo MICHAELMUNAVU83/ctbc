@@ -14,6 +14,8 @@ defmodule Ctbc.Events.Event do
     field :price, :string
     field :venue, :string
     belongs_to :user, Ctbc.Users.User
+    has_many :tickets, Ctbc.Tickets.Ticket
+    has_many :promo_codes, Ctbc.PromoCodes.PromoCode
 
     timestamps()
   end

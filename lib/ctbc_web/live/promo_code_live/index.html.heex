@@ -1,5 +1,3 @@
-<h1>Listing Promo codes</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.promo_code_index_path(@socket, :index)}>
     <.live_component
@@ -8,36 +6,125 @@
       title={@page_title}
       action={@live_action}
       promo_code={@promo_code}
+      events={@events}
+      current_user={@current_user}
       return_to={Routes.promo_code_index_path(@socket, :index)}
     />
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name of influencer</th>
-      <th>Phone number</th>
-      <th>Promo code</th>
+<div class="flex flex-col w-[100%] gap-2">
+  <div class="flex flex-col gap-1">
+    <div class="flex flex-row items-end justify-between w-[100%]">
+      <p>
+        You have a total of <%= length(@promo_codes) %> promo codes
+      </p>
+      <%= live_patch(to: Routes.promo_code_index_path(@socket, :new)) do %>
+        <button class="bg-green-500 flex gap-2 items-center text-white  rounded-md p-2">
+          <%= Heroicons.icon("plus",
+            type: "solid",
+            class: "h-8   font-bold w-8"
+          ) %> New Promo Code
+        </button>
+      <% end %>
+    </div>
+  </div>
+  <div class="bg-white h-[60vh]  rounded-xl p-4 overflow-y-scroll">
+    <table class="w-[100%]">
+      <thead class="border-b-2  border-black">
+        <tr>
+          <th class="p-2 font-semibold text-gray-700">Name</th>
+          <th class="p-2 font-semibold text-gray-700">Number</th>
+          <th class="p-2 font-semibold text-gray-700">Code</th>
+          <th class="p-2 font-semibold text-gray-700">Link</th>
+          <th class="p-2 font-semibold text-gray-700">Tickets</th>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="promo_codes">
-    <%= for promo_code <- @promo_codes do %>
-      <tr id={"promo_code-#{promo_code.id}"}>
-        <td><%= promo_code.name_of_influencer %></td>
-        <td><%= promo_code.phone_number %></td>
-        <td><%= promo_code.promo_code %></td>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody phx-hook="Copy" id="promo_codes">
+        <%= for promo_code <- @promo_codes do %>
+          <tr
+            id={"promo_code-#{promo_code.id}"}
+            class="border-b-[1px] cursor-pointer text-center hover:bg-blue-100/50 transition-all ease-in-out duration-500  border-black"
+          >
+            <td class="p-2 font-semibold text-gray-700"><%= promo_code.name_of_influencer %></td>
+            <td class="p-2 font-semibold text-gray-700"><%= promo_code.phone_number %></td>
+            <td class="copyable"><%= promo_code.promo_code %></td>
+            <td class="flex gap-2 p-2">
+              <input
+                class="copyable p-2 rounded-md  w-[100%]"
+                type="text"
+                disabled
+                value={
+                  "https://Ctbctest.fly.dev/" <>
+                    "events" <>
+                    "/" <>
+                    Integer.to_string(promo_code.event_id) <>
+                    "/" <> promo_code.name_of_influencer <> "/" <> promo_code.promo_code
+                }
+              />
+              <button class="clipboardCopy bg-green-500 flex gap-2 items-center text-white  rounded-md p-2 ">
+                Copy
+              </button>
 
-        <td>
-          <span><%= live_redirect "Show", to: Routes.promo_code_show_path(@socket, :show, promo_code) %></span>
-          <span><%= live_patch "Edit", to: Routes.promo_code_index_path(@socket, :edit, promo_code) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: promo_code.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+              <button
+                phx-click="send_sms"
+                phx-value-id={promo_code.id}
+                class=" bg-green-500 flex gap-2 w-[200px] justify-center items-center text-white  rounded-md p-2 "
+              >
+                Send SMS
+              </button>
+            </td>
 
-<span><%= live_patch "New Promo code", to: Routes.promo_code_index_path(@socket, :new) %></span>
+            <td>
+              <%= length(
+                Ctbc.Tickets.list_tickets_sold_by_influencer(
+                  promo_code.name_of_influencer,
+                  promo_code.promo_code
+                )
+              ) %>
+            </td>
+
+            <td>
+              <div class="flex flex-row gap-2 justify-center items-center">
+                <div>
+                  <%= live_redirect(to: Routes.promo_code_show_path(@socket, :show, promo_code)) do %>
+                    <%= Heroicons.icon("eye",
+                      type: "solid",
+                      class: "h-6  group-hover:text-green-600 text-green-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= live_patch(to: Routes.promo_code_index_path(@socket, :edit, promo_code)) do %>
+                    <%= Heroicons.icon("pencil",
+                      type: "solid",
+                      class: "h-6  group-hover:text-blue-600 text-blue-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= link(
+                    to: "#",
+                    phx_click: "delete",
+                    phx_value_id: promo_code.id,
+                    data: [confirm: "Are you sure?"]
+                  )  do %>
+                    <%= Heroicons.icon("trash",
+                      type: "solid",
+                      class: "h-6  group-hover:text-red-600 text-red-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <span></span>
+</div>

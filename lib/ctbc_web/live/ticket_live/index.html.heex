@@ -1,5 +1,3 @@
-<h1>Listing Tickets</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.ticket_index_path(@socket, :index)}>
     <.live_component
@@ -8,56 +6,250 @@
       title={@page_title}
       action={@live_action}
       ticket={@ticket}
+      current_user={@current_user}
+      events={@events}
       return_to={Routes.ticket_index_path(@socket, :index)}
     />
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Ticketid</th>
-      <th>Quantity</th>
-      <th>Ticket type</th>
-      <th>Event type</th>
-      <th>Status</th>
-      <th>Ticket holder name</th>
-      <th>Ticket holder email</th>
-      <th>Phone number</th>
-      <th>Ticket added type</th>
-      <th>Ticket added by</th>
-      <th>Promo code name</th>
-      <th>Promo code number</th>
-      <th>Total cost</th>
+<div class="flex flex-col w-[100%] gap-2">
+  <div class="flex flex-col gap-1">
+    <div class="flex flex-row items-center justify-between w-[100%]">
+      <p>
+        You have a total of <%= @count %> tickets
+      </p>
+      <div class="flex gap-2 items-center">
+        <div class="flex justify-end ">
+          <%= link to: Routes.export_path(@socket, :create), class: "btn btn-secondary", method: :post do %>
+            <button class="bg-green-500 flex gap-2 items-center text-white  rounded-md p-2">
+              <%= Heroicons.icon("arrow-down-tray",
+                type: "solid",
+                class: "h-8   font-bold w-8"
+              ) %> Export
+            </button>
+          <% end %>
+        </div>
+        <%= live_patch(to: Routes.ticket_index_path(@socket, :new)) do %>
+          <button class="bg-green-500 flex gap-2 items-center text-white  rounded-md p-2">
+            <%= Heroicons.icon("plus",
+              type: "solid",
+              class: "h-8   font-bold w-8"
+            ) %> New Ticket
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-between">
+    <div class="w-[30%] flex flex-col gap-1">
+      <p>
+        Search by any
+      </p>
+      <.form let={f} for={@changeset} class="w-[100%]" phx_change="search">
+        <%= text_input(f, :search,
+          placeholder: "Search ticket number or phone",
+          class:
+            "w-[100%] rounded-md border-transparent focus:border-transparent focus:ring-0  border-gray-300 border-2 p-2"
+        ) %>
+      </.form>
+    </div>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="tickets">
-    <%= for ticket <- @tickets do %>
-      <tr id={"ticket-#{ticket.id}"}>
-        <td><%= ticket.ticketid %></td>
-        <td><%= ticket.quantity %></td>
-        <td><%= ticket.ticket_type %></td>
-        <td><%= ticket.event_type %></td>
-        <td><%= ticket.status %></td>
-        <td><%= ticket.ticket_holder_name %></td>
-        <td><%= ticket.ticket_holder_email %></td>
-        <td><%= ticket.phone_number %></td>
-        <td><%= ticket.ticket_added_type %></td>
-        <td><%= ticket.ticket_added_by %></td>
-        <td><%= ticket.promo_code_name %></td>
-        <td><%= ticket.promo_code_number %></td>
-        <td><%= ticket.total_cost %></td>
+    <div class="w-[22%] flex flex-col gap-1">
+      <p>
+        Filter Scanned
+      </p>
 
-        <td>
-          <span><%= live_redirect "Show", to: Routes.ticket_show_path(@socket, :show, ticket) %></span>
-          <span><%= live_patch "Edit", to: Routes.ticket_index_path(@socket, :edit, ticket) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: ticket.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      <.form let={f} for={@changeset} class="w-[100%]" phx_change="filter_by_status">
+        <%= select(f, :status, ["Scanned", "Not Scanned"],
+          prompt: "Filter Scans",
+          class:
+            "w-[100%] rounded-md border-transparent focus:border-transparent focus:ring-0  border-gray-300 border-2 p-2 "
+        ) %>
+      </.form>
+    </div>
+    <div class="w-[22%] flex flex-col gap-1">
+      <p>
+        Filter Promo Tickets
+      </p>
 
-<span><%= live_patch "New Ticket", to: Routes.ticket_index_path(@socket, :new) %></span>
+      <.form let={f} for={@changeset} phx_change="filter_by_promo">
+        <%= select(f, :promo, ["Normal", "Promo"],
+          prompt: "Filter Promo Tickets",
+          class:
+            "  w-[100%] rounded-md border-transparent focus:border-transparent focus:ring-0  border-gray-300 border-2 p-2"
+        ) %>
+      </.form>
+    </div>
+
+    <div class="w-[22%] flex flex-col gap-1">
+      <p>
+        Filter Gate Type
+      </p>
+
+      <.form let={f} for={@changeset} phx_change="filter_by_type">
+        <%= select(f, :type, ["Gate", "Online"],
+          prompt: "Filter Gate Tickets",
+          class:
+            " w-[100%] rounded-md border-transparent focus:border-transparent focus:ring-0  border-gray-300 border-2 p-2 "
+        ) %>
+      </.form>
+    </div>
+  </div>
+
+  <div class="bg-white h-[60vh] flex justify-between flex-col  rounded-xl p-4 overflow-y-scroll">
+    <table class="w-[100%]">
+      <thead class="border-b-2  border-black">
+        <tr>
+          <th class="p-2 font-semibold text-gray-700">Ticketid</th>
+          <th class="p-2 font-semibold text-gray-700">Quantity</th>
+          <th class="p-2 font-semibold text-gray-700">Ticket</th>
+
+          <th class="p-2 font-semibold text-gray-700">Event</th>
+          <th class="p-2 font-semibold text-gray-700">Status</th>
+          <th class="p-2 font-semibold text-gray-700">Number</th>
+          <th class="p-2 font-semibold text-gray-700">Name</th>
+          <th class="p-2 font-semibold text-gray-700">Email</th>
+          <th class="p-2 font-semibold text-gray-700">PromoName</th>
+          <th class="p-2 font-semibold text-gray-700">PromoNo</th>
+          <th class="p-2 font-semibold text-gray-700">Send SMS</th>
+          <th class="p-2 font-semibold text-gray-700">Send Email</th>
+
+          <th class="p-2 font-semibold text-gray-700">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tickets">
+        <%= for ticket <- @tickets do %>
+          <tr
+            id={"ticket-#{ticket.id}"}
+            class="border-b-[1px] cursor-pointer text-center hover:bg-blue-100/50 transition-all ease-in-out duration-500  border-black"
+          >
+            <td class="p-1"><%= ticket.ticketid %></td>
+            <td class="p-1"><%= ticket.quantity %></td>
+            <td class="p-1"><%= ticket.ticket_type %></td>
+            <td class="w-[100%] p-2 ">
+              <div class="flex flex-col ">
+                <p class="w-[150px]">
+                  <%= ticket.event_type %>
+                </p>
+              </div>
+            </td>
+            <td class="w-[100%]">
+              <div class="flex flex-col ">
+                <%= if ticket.status == "Scanned" do %>
+                  <span class="bg-green-500    text-white rounded-md p-1">
+                    <%= ticket.status %>
+                  </span>
+                <% else %>
+                  <span class="bg-red-500 w-[150px]  break-keep  text-white rounded-md p-1">
+                    <%= ticket.status %>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+            <td class="p-1"><%= ticket.phone_number %></td>
+            <td class="p-1"><%= ticket.ticket_holder_name %></td>
+            <td class="p-1"><%= ticket.ticket_holder_email %></td>
+            <td class="p-1"><%= ticket.promo_code_name %></td>
+            <td class="p-1"><%= ticket.promo_code_number %></td>
+            <td class="p-1">
+              <button
+                phx-click="send_sms"
+                phx-value-id={ticket.id}
+                class=" bg-green-500 flex gap-2 w-[200px] justify-center items-center text-white  rounded-md p-2 "
+              >
+                Send SMS
+              </button>
+            </td>
+            <td class="p-1">
+              <button
+                phx-click="send_email"
+                phx-value-id={ticket.id}
+                class=" bg-green-500 flex gap-2 w-[200px] justify-center items-center text-white  rounded-md p-2 "
+              >
+                Send Email
+              </button>
+            </td>
+
+            <td>
+              <div class="flex flex-row gap-2 justify-center items-center">
+                <div>
+                  <%= live_redirect(to: Routes.ticket_show_path(@socket, :show, ticket.ticketid)) do %>
+                    <%= Heroicons.icon("eye",
+                      type: "solid",
+                      class: "h-6  group-hover:text-green-600 text-green-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= live_patch(to: Routes.ticket_index_path(@socket, :edit, ticket)) do %>
+                    <%= Heroicons.icon("pencil",
+                      type: "solid",
+                      class: "h-6  group-hover:text-blue-600 text-blue-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= link(
+                    to: "#",
+                    phx_click: "delete",
+                    phx_value_id: ticket.id,
+                    data: [confirm: "Are you sure?"]
+                  )  do %>
+                    <%= Heroicons.icon("trash",
+                      type: "solid",
+                      class: "h-6  group-hover:text-red-600 text-red-400 w-6"
+                    ) %>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="flex flex-wrap flex-row p-2">
+      <%= if @page_number > 1 do %>
+        <%= live_patch(
+            to: Routes.ticket_index_path(@socket, :index, page: @page_number - 1),
+            class: "pagination-link"
+          ) do %>
+          <div class="flex gap-2 items-center ">
+            Previous
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= for idx <-  Enum.to_list(1..@total_pages) do %>
+        <%= live_patch(
+            to: Routes.ticket_index_path(@socket, :index, page: idx),
+            class: "pagination-link"
+          ) do %>
+          <%= if @page_number == idx do %>
+            <p class="bg-green-500    text-white px-2 border-white border-transparent ">
+              <%= idx %>
+            </p>
+          <% else %>
+            <p class="px-2   border-white">
+              <%= idx %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%= if @page_number < @total_pages do %>
+        <%= live_patch(
+            to: Routes.ticket_index_path(@socket, :index, page: @page_number + 1),
+            class: "pagination-link"
+          )  do %>
+          <div class="flex gap-2 items-center ">
+            Next
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

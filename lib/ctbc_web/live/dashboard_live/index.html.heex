@@ -1,0 +1,155 @@
+<div id="stats" class="hidden">
+  <p id="gate_tickets">
+    <%= length(@gate_tickets) %>
+  </p>
+  <p id="online_tickets">
+    <%= length(@online_tickets) %>
+  </p>
+
+  <p id="normal_tickets">
+    <%= length(@normal_tickets) %>
+  </p>
+  <p id="promo_tickets">
+    <%= length(@promo_tickets) %>
+  </p>
+
+  <p id="early_bird_tickets">
+    <%= length(@early_bird_tickets) %>
+  </p>
+  <p id="flash_sale_tickets">
+    <%= length(@flash_sale_tickets) %>
+  </p>
+  <p id="advanced_tickets">
+    <%= length(@advanced_tickets) %>
+  </p>
+  <%= for promo_code <- @promo_codes do %>
+    <p class="promo_code_name">
+      <%= promo_code.name_of_influencer %>
+    </p>
+    <p class="tickets_sold">
+      <%= length(
+        Ctbc.Tickets.list_tickets_sold_by_influencer(
+          promo_code.name_of_influencer,
+          promo_code.promo_code
+        )
+      ) %>
+    </p>
+  <% end %>
+</div>
+
+<div class="grid md:grid-cols-4 grid-cols-1 p-4  gap-8 ">
+  <div class="bg-white shadow-md shadow-gray-500 mt-4 relative rounded-2xl h-[150px]">
+    <div class="bg-yellow-300 w-[60px] h-[60px] flex justify-center items-center rounded-2xl text-white absolute -top-6 left-4">
+      <%= Heroicons.icon("ticket",
+        type: "solid",
+        class: "h-6 text-white w-6"
+      ) %>
+    </div>
+    <div class="flex flex-col justify-between">
+      <div class="p-2  flex flex-col items-end justify-start ">
+        <p class="text-gray-500">
+          Tickets
+        </p>
+        <p class="text-[#131217] text-[30px]">
+          <%= length(@all_tickets) %>
+        </p>
+      </div>
+
+      <p class="w-[80%] mx-auto h-[1px] bg-gray-500" />
+    </div>
+  </div>
+
+  <div class="bg-white shadow-md shadow-gray-500 mt-4 relative rounded-2xl h-[150px]">
+    <div class="bg-black w-[60px] h-[60px] flex justify-center items-center rounded-2xl text-white absolute -top-6 left-4">
+      <%= Heroicons.icon("users",
+        type: "solid",
+        class: "h-6 text-white w-6"
+      ) %>
+    </div>
+    <div class="flex flex-col justify-between">
+      <div class="p-2  flex flex-col items-end justify-start ">
+        <p class="text-gray-500">
+          Promoters
+        </p>
+        <p class="text-[#131217] text-[30px]">
+          <%= length(@promoters) %>
+        </p>
+      </div>
+
+      <p class="w-[80%] mx-auto h-[1px] bg-gray-500" />
+    </div>
+  </div>
+  <div class="bg-white shadow-md shadow-gray-500 mt-4 relative rounded-2xl h-[150px]">
+    <div class="bg-red-500 w-[60px] h-[60px] flex justify-center items-center rounded-2xl text-white absolute -top-6 left-4">
+      <%= Heroicons.icon("banknotes",
+        type: "solid",
+        class: "h-6 text-white w-6"
+      ) %>
+    </div>
+    <div class="flex flex-col justify-between">
+      <div class="p-2  flex flex-col items-end justify-start ">
+        <p class="text-gray-500">
+          Revenue
+        </p>
+        <p class="text-[#131217] gap-2 flex items-center text-[30px]">
+          <%= @revenue %>Ksh
+        </p>
+      </div>
+
+      <p class="w-[80%] mx-auto h-[1px] bg-gray-500" />
+    </div>
+  </div>
+  <div class="bg-white shadow-md shadow-gray-500 mt-4 relative rounded-2xl h-[150px]">
+    <div class="bg-green-500 w-[60px] h-[60px] flex justify-center items-center rounded-2xl text-white absolute -top-6 left-4">
+      <%= Heroicons.icon("user-group",
+        type: "solid",
+        class: "h-6 text-white w-6"
+      ) %>
+    </div>
+    <div class="flex flex-col justify-between">
+      <div class="p-2  flex flex-col items-end justify-start ">
+        <p class="text-gray-500">
+          Staff
+        </p>
+        <p class="text-[#131217] text-[30px]">
+          <%= length(@staff) %>
+        </p>
+      </div>
+
+      <p class="w-[80%] mx-auto h-[1px] bg-gray-500" />
+    </div>
+  </div>
+</div>
+<div class="flex justify-between w-[100%]">
+  <div class="w-[30%]">
+    <canvas
+      id="myChart"
+      class=" w-[40%] pie bg-white rounded-xl "
+      phx-hook="Chart"
+      phx-update="ignore"
+    >
+    </canvas>
+  </div>
+  <div class="w-[30%]">
+    <canvas
+      id="myChart2"
+      class=" w-[40%] pie bg-white rounded-xl "
+      phx-hook="Chart2"
+      phx-update="ignore"
+    >
+    </canvas>
+  </div>
+
+  <div class="w-[30%]">
+    <canvas
+      id="myChart3"
+      class=" w-[40%] pie bg-white rounded-xl "
+      phx-hook="Chart3"
+      phx-update="ignore"
+    >
+    </canvas>
+  </div>
+</div>
+
+<canvas id="myChart4" class="bar bg-white p-4 rounded-xl " phx-hook="Chart4" phx-update="ignore">
+</canvas>

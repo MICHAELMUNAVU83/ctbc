@@ -20,6 +20,15 @@ if System.get_env("PHX_SERVER") do
   config :ctbc, CtbcWeb.Endpoint, server: true
 end
 
+if config_env() == :prod or config_env() == :dev do
+  # Configuring the mailer
+  config :ctbc, Ctbc.Mailer,
+    adapter: Swoosh.Adapters.Sendgrid,
+    api_key: ""
+
+  config :swoosh, :api_client, Swoosh.ApiClient.Finch
+end
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

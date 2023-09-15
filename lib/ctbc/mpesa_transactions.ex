@@ -21,6 +21,43 @@ defmodule Ctbc.MpesaTransactions do
     Repo.all(MpesaTransaction)
   end
 
+  def paginate_mpesa_transactions(params) do
+    Repo.paginate(MpesaTransaction, params)
+  end
+
+  def list_transactions_by_search(search) do
+    if search == "" do
+      query =
+        Repo.all(MpesaTransaction)
+    else
+      query =
+        Repo.all(MpesaTransaction)
+        |> Enum.filter(fn transaction ->
+          String.contains?(
+            String.downcase(transaction.transaction_code),
+            String.downcase(search)
+          ) or
+            String.contains?(
+              String.downcase(transaction.transaction_reference),
+              String.downcase(search)
+            )
+        end)
+    end
+  end
+
+  def list_transactions_by_success(status) do
+    if status == "" do
+      query =
+        Repo.all(MpesaTransaction)
+    else
+      query =
+        Repo.all(MpesaTransaction)
+        |> Enum.filter(fn transaction ->
+          transaction.success == status
+        end)
+    end
+  end
+
   @doc """
   Gets a single mpesa_transaction.
 

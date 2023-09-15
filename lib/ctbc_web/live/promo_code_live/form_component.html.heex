@@ -1,5 +1,5 @@
-<div>
-  <h2><%= @title %></h2>
+<div class="w-[95%]">
+  <h2 class="text-green-500 uppercase text-3xl font-semibold"><%= @title %></h2>
 
   <.form
     let={f}
@@ -7,22 +7,50 @@
     id="promo_code-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
-  
-    <%= label f, :name_of_influencer %>
-    <%= text_input f, :name_of_influencer %>
-    <%= error_tag f, :name_of_influencer %>
-  
-    <%= label f, :phone_number %>
-    <%= text_input f, :phone_number %>
-    <%= error_tag f, :phone_number %>
-  
-    <%= label f, :promo_code %>
-    <%= text_input f, :promo_code %>
-    <%= error_tag f, :promo_code %>
-  
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    phx-submit="save"
+  >
+    <div class="flex flex-col gap-2">
+      <%= label(f, :name_of_influencer, class: "font-semibold  text-xl") %>
+      <%= text_input(f, :name_of_influencer,
+        class:
+          "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+      ) %>
+      <p class="pt-5">
+        <%= error_tag(f, :name_of_influencer) %>
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <%= label(f, :phone_number, class: "font-semibold  text-xl") %>
+      <%= text_input(f, :phone_number,
+        class:
+          "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+      ) %>
+      <p class="pt-5">
+        <%= error_tag(f, :phone_number) %>
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <%= label(f, :event, class: "font-semibold  text-xl") %>
+      <%= select(f, :event_id, @events,
+        prompt: "Select An Event",
+        class:
+          "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+      ) %>
+      <p class="pt-5">
+        <%= error_tag(f, :event_id) %>
+      </p>
+    </div>
+
+    <%= hidden_input(f, :user_id, value: @current_user.id) %>
+
+    <div class="flex flex-col justify-center items-center gap-2 ">
+      <%= submit("Save",
+        phx_disable_with: "Saving...",
+        class:
+          "bg-green-500 flex gap-2 items-center text-white  rounded-md px-4 py-2 hover:scale-105 transition-all ease-in-out duration-500"
+      ) %>
     </div>
   </.form>
 </div>

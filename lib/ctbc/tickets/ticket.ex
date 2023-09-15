@@ -8,14 +8,15 @@ defmodule Ctbc.Tickets.Ticket do
     field :quantity, :string
     field :ticket_type, :string
     field :event_type, :string
-    field :ticket_holder_name, :string
-    field :ticket_holder_email, :string
     field :phone_number, :string
     field :ticket_added_type, :string
     field :ticket_added_by, :string
     field :promo_code_name, :string
-    field :promo_code_number, :string
     field :total_cost, :integer
+    field :ticket_holder_name, :string
+    field :ticket_holder_email, :string
+
+    field :promo_code_number, :string
     belongs_to :user, Ctbc.Users.User
     belongs_to :event, Ctbc.Events.Event
 
@@ -31,16 +32,15 @@ defmodule Ctbc.Tickets.Ticket do
       :ticket_type,
       :event_type,
       :status,
-      :ticket_holder_name,
-      :ticket_holder_email,
       :phone_number,
+      :user_id,
+      :event_id,
       :ticket_added_type,
-      :ticket_added_by,
       :promo_code_name,
       :promo_code_number,
       :total_cost,
-      :user_id,
-      :event_id
+      :ticket_holder_name,
+      :ticket_holder_email
     ])
     |> validate_required([
       :ticketid,
@@ -48,16 +48,18 @@ defmodule Ctbc.Tickets.Ticket do
       :ticket_type,
       :event_type,
       :status,
-      :ticket_holder_name,
-      :ticket_holder_email,
       :phone_number,
-      :ticket_added_type,
-      :ticket_added_by,
-      :promo_code_name,
-      :promo_code_number,
-      :total_cost,
       :user_id,
-      :event_id
+      :event_id,
+      :ticket_added_type,
+      :total_cost,
+      :ticket_holder_name,
+      :ticket_holder_email
     ])
+    |> validate_format(
+      :phone_number,
+      ~r/^254\d{9}$/,
+      message: "Number has to start with 254 and have 12 digits"
+    )
   end
 end

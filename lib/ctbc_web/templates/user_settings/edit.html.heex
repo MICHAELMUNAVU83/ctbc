@@ -1,53 +1,199 @@
-<h1>Settings</h1>
+<div class="transparent  bg-black z-50 w-[100%]    poppins-regular p-2 hidden md:flex items-center justify-between  mx-auto">
+  <a
+    href="/#swiper"
+    class="text-white  md:text-xl text-xs uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+  >
+    Home
+  </a>
 
-<h3>Change email</h3>
+  <div class="flex gap-2 items-center">
+    <%= link("Back to Dashboard",
+      to: Routes.dashboard_index_path(@conn, :index),
+      class:
+        "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+    ) %>
 
-<.form let={f} for={@email_changeset} action={Routes.user_settings_path(@conn, :update)} id="update_email">
-  <%= if @email_changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-  <% end %>
-
-  <%= hidden_input f, :action, name: "action", value: "update_email" %>
-
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-  <%= error_tag f, :email %>
-
-  <%= label f, :current_password, for: "current_password_for_email" %>
-  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email" %>
-  <%= error_tag f, :current_password %>
-
-  <div>
-    <%= submit "Change email" %>
+    <%= link("Log out",
+      to: Routes.user_session_path(@conn, :delete),
+      method: :delete,
+      class:
+        "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+    ) %>
   </div>
-</.form>
+</div>
 
-<h3>Change password</h3>
-
-<.form let={f} for={@password_changeset} action={Routes.user_settings_path(@conn, :update)} id="update_password">
-  <%= if @password_changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+<nav phx-hook="Navbar" id="nav">
+  <div class=" bg-black w-[100%] items-center  md:hidden flex justify-between p-2">
+    <div>
+      <%= live_redirect to: Routes.page_index_path(@conn, :index) do %>
+        <p class="text-3xl poppins-regular text-white">
+          The Kulture Ke
+        </p>
+      <% end %>
     </div>
-  <% end %>
-
-  <%= hidden_input f, :action, name: "action", value: "update_password" %>
-
-  <%= label f, :password, "New password" %>
-  <%= password_input f, :password, required: true %>
-  <%= error_tag f, :password %>
-
-  <%= label f, :password_confirmation, "Confirm new password" %>
-  <%= password_input f, :password_confirmation, required: true %>
-  <%= error_tag f, :password_confirmation %>
-
-  <%= label f, :current_password, for: "current_password_for_password" %>
-  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password" %>
-  <%= error_tag f, :current_password %>
-
-  <div>
-    <%= submit "Change password" %>
+    <button id="toggleButton" class=" flex flex-col  rounded-md gap-2  ">
+      <div class="h-[2px] bg-white w-[40px]" />
+      <div class="h-[2px] bg-white w-[40px]" />
+      <div class="h-[2px] bg-white w-[40px]" />
+    </button>
   </div>
-</.form>
+
+  <div
+    id="sidebar"
+    class="fixed green top-0 left-0 h-full w-60 z-50 bg-white  text-black transition duration-300 transform -translate-x-full"
+  >
+    <div
+      class="flex flex-col poppins-regular text-xl gap-4 items-start p-4 pt-24 "
+      id="sidebarContent"
+    >
+      <a
+        href="/#swiper"
+        class="     uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+      >
+        Home
+      </a>
+      <%= link("Back to Dashboard",
+        to: Routes.dashboard_index_path(@conn, :index),
+        class: "uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+      ) %>
+
+      <%= link("Log out",
+        to: Routes.user_session_path(@conn, :delete),
+        method: :delete,
+        class: "uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+      ) %>
+    </div>
+  </div>
+</nav>
+
+<div class="bg-cover bg-center h-[100vh]" style="background-image: url('/images/bg.jpeg')">
+  <div class="flex flex-col h-[100%] justify-center items-center bg-black/50">
+    <div class="bg-white flex flex-row md:w-[80%] w-[320px] h-[550px] py-6  justify-center items-center ">
+      <div class="bg-gray-100 w-[45%] h-[100%] mx-auto p-2 mt-4 rounded-md">
+        <h3 class="text-2xl uppercase text-center font-semibold  text-green-500">Change Email</h3>
+        <p class="text-center py-2">
+          Add your new email and current password to change your email address.
+        </p>
+        <.form
+          let={f}
+          for={@email_changeset}
+          action={Routes.user_settings_path(@conn, :update)}
+          id="update_email"
+        >
+          <%= if @email_changeset.action do %>
+            <div class="alert alert-danger">
+              <p>Oops, something went wrong! Please check the errors below.</p>
+            </div>
+          <% end %>
+
+          <%= hidden_input(f, :action, name: "action", value: "update_email") %>
+          <div class="flex flex-col gap-2">
+            <div class="flex flex-col w-[100%] gap-2">
+              <%= label(f, :email, class: "font-semibold  text-xl") %>
+              <%= email_input(f, :email,
+                required: true,
+                class:
+                  "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              ) %>
+              <p class="pt-5">
+                <%= error_tag(f, :email) %>
+              </p>
+            </div>
+            <div class="flex flex-col w-[100%] gap-2">
+              <%= label(f, :current_password,
+                for: "current_password_for_email",
+                class: "font-semibold  text-xl"
+              ) %>
+              <%= password_input(f, :current_password,
+                required: true,
+                name: "current_password",
+                id: "current_password_for_email",
+                class:
+                  "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              ) %>
+              <p class="pt-5">
+                <%= error_tag(f, :current_password) %>
+              </p>
+            </div>
+
+            <div class="flex flex-col justify-center items-center gap-2 ">
+              <%= submit("Change email",
+                class:
+                  "bg-green-500 flex gap-2 items-center text-white  rounded-md px-4 py-2 hover:scale-105 transition-all ease-in-out duration-500"
+              ) %>
+            </div>
+          </div>
+        </.form>
+      </div>
+      <div class="bg-gray-100 w-[45%] h-[100%] mx-auto mt-8 p-2 rounded-md">
+        <h3 class="text-2xl uppercase text-center font-semibold  text-green-500">
+          Change Password
+        </h3>
+
+        <.form
+          let={f}
+          for={@password_changeset}
+          action={Routes.user_settings_path(@conn, :update)}
+          id="update_password"
+        >
+          <%= if @password_changeset.action do %>
+            <div class="alert alert-danger">
+              <p>Oops, something went wrong! Please check the errors below.</p>
+            </div>
+          <% end %>
+
+          <%= hidden_input(f, :action, name: "action", value: "update_password") %>
+          <div class="flex gap-2  flex-col">
+            <div class="flex flex-col gap-2">
+              <%= label(f, :password, "New password", class: "font-semibold  text-xl") %>
+              <%= password_input(f, :password,
+                required: true,
+                class:
+                  "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              ) %>
+              <p class="pt-5">
+                <%= error_tag(f, :password) %>
+              </p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <%= label(f, :password_confirmation, "Confirm new password",
+                class: "font-semibold  text-xl"
+              ) %>
+              <%= password_input(f, :password_confirmation,
+                required: true,
+                class:
+                  "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              ) %>
+              <p class="pt-5">
+                <%= error_tag(f, :password_confirmation) %>
+              </p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <%= label(f, :current_password,
+                for: "current_password_for_password",
+                class: "font-semibold  text-xl"
+              ) %>
+              <%= password_input(f, :current_password,
+                required: true,
+                name: "current_password",
+                id: "current_password_for_password",
+                class:
+                  "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              ) %>
+              <p class="pt-5">
+                <%= error_tag(f, :current_password) %>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-center items-center gap-2 ">
+            <%= submit("Change password",
+              class:
+                "bg-green-500 flex gap-2 items-center text-white  rounded-md px-4 py-2 hover:scale-105 transition-all ease-in-out duration-500"
+            ) %>
+          </div>
+        </.form>
+      </div>
+    </div>
+  </div>
+</div>

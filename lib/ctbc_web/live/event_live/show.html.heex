@@ -1,71 +1,314 @@
-<h1>Show Event</h1>
-
-<%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.event_show_path(@socket, :show, @event)}>
+<%= if @live_action in [:buyticket] do %>
+  <.modal return_to={Routes.event_show_path(@socket, :show, @event.id)}>
     <.live_component
-      module={CtbcWeb.EventLive.FormComponent}
-      id={@event.id}
+      module={CtbcWeb.EventLive.BuyTicketComponent}
+      id={@event.id || :new}
       title={@page_title}
       action={@live_action}
       event={@event}
-      return_to={Routes.event_show_path(@socket, :show, @event)}
+      changeset={@changeset}
+      checkoutId={@checkoutId}
+      number_of_tickets={@number_of_tickets}
+      success_modal={@success_modal}
+      error_modal={@error_modal}
+      mpesa={@mpesa}
+      mpesa_number={@mpesa_number}
+      calls_for_user={@calls_for_user}
+      new_number_of_calls={@new_number_of_calls}
+      payment_state={@payment_state}
+      ticket_number={@ticket_number}
+      total_cost={@total_cost}
+      error_message={@error_message}
+      return_to={Routes.event_show_path(@socket, :show, @event.id)}
     />
   </.modal>
 <% end %>
 
-<ul>
+<%= if @error_modal == true do %>
+  <div class="fixed poppins-regular  shadow-xl h-[100vh] bg-white/60  inset-0  z-50 flex flex-col  justify-center items-center  mx-auto">
+    <div class="bg-white  md:w-[500px] w-[320px] flex flex-col items-center justify-between h-[400px]">
+      <div class="flex flex-col w-[100%] p-2">
+        <div class="flex justify-between items-center">
+          <div class="text-red-500 jakrata-regular text-xl">
+            Payment Unsuccesful
+          </div>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @event.name %>
-  </li>
+          <div
+            class="cursor-pointer bg-white shadow-sm shadow-gray-400  rounded-full"
+            phx-click="close_error_modal"
+          >
+            <%= Heroicons.icon("x-mark",
+              type: "solid",
+              class: "h-6  text-red-500 font-bold w-6"
+            ) %>
+          </div>
+        </div>
 
-  <li>
-    <strong>Description:</strong>
-    <%= @event.description %>
-  </li>
+        <p class="bg-gradient-to-r from-red-500 to-black w-[100%] h-[2px] my-2" />
+      </div>
 
-  <li>
-    <strong>Date of event:</strong>
-    <%= @event.date_of_event %>
-  </li>
+      <div>
+        <%= Heroicons.icon("x-mark",
+          type: "solid",
+          class: "h-48  text-red-500  font-bold w-48"
+        ) %>
+      </div>
 
-  <li>
-    <strong>Time of starting:</strong>
-    <%= @event.time_of_starting %>
-  </li>
+      <div class="flex flex-col justify-center items-center text-center">
+        <p class="text-red-500  jakrata-regular ">
+          <%= @error_message %> , please try again
+        </p>
+      </div>
 
-  <li>
-    <strong>Time of ending:</strong>
-    <%= @event.time_of_ending %>
-  </li>
+      <div
+        class="flex flex-col justify-center items-center w-[100%]"
+        phx-click="close_error_modal"
+      >
+        <p class="bg-gradient-to-l w-[100%] flex justify-center items-center text-white jakrata-regular text-xl  uppercase  py-2  ease-in-out transition-all duration-500 cursor-pointer from-red-500/80  via-red-500 to-black">
+          Close
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>
 
-  <li>
-    <strong>Type:</strong>
-    <%= @event.type %>
-  </li>
+<%= if @success_modal == true do %>
+  <div class="fixed poppins-regular  shadow-xl h-[100vh] bg-white/60  inset-0  z-50 flex flex-col  justify-center items-center  mx-auto">
+    <div class="bg-white md:w-[500px] w-[320px] flex flex-col items-center justify-between h-[500px]">
+      <div class="flex flex-col w-[100%] p-2">
+        <div class="flex justify-between items-center">
+          <div class="text-green-500 jakrata-regular text-xl">
+            Payment Successful
+          </div>
 
-  <li>
-    <strong>Price:</strong>
-    <%= @event.price %>
-  </li>
+          <div
+            class="cursor-pointer bg-white rounded-full shadow-sm shadow-gray-500"
+            phx-click="close_success_modal"
+          >
+            <%= Heroicons.icon("x-mark",
+              type: "solid",
+              class: "h-6  text-green-500 font-bold w-6"
+            ) %>
+          </div>
+        </div>
 
-  <li>
-    <strong>Venue:</strong>
-    <%= @event.venue %>
-  </li>
+        <p class="bg-gradient-to-r from-green-500 to-white w-[100%] h-[2px] my-2" />
+      </div>
+      <p class="text-green-500 jakrata-regular ">
+        Thanks for Buying a Ticket
+      </p>
 
-  <li>
-    <strong>Image:</strong>
-    <%= @event.image %>
-  </li>
+      <div>
+        <%= Heroicons.icon("check",
+          type: "solid",
+          class: "h-40  text-green-500 rotate-12 font-bold w-40"
+        ) %>
+      </div>
 
-  <li>
-    <strong>Status:</strong>
-    <%= @event.status %>
-  </li>
+      <div class="flex flex-col justify-center items-center text-center">
+        <p class="jakrata-regular text-green-500">
+          We look forward to seeing you at the event
+        </p>
+        <div class="flex flex-col gap-2">
+          <p class="text-black font-semibold">
+            You can view and download your ticket below , or you can view it from the Sms we sent you
+          </p>
 
-</ul>
+          <a
+            href={@ticket_link}
+            class="bg-gradient-to-l my-8 px-8  mx-auto rounded-md  text-white  uppercase font-semibold py-2 hover:scale-105  ease-in-out transition-all duration-500 cursor-pointer from-green-400  via-green-500 to-green-700"
+          >
+            View Ticket
+          </a>
+        </div>
+      </div>
 
-<span><%= live_patch "Edit", to: Routes.event_show_path(@socket, :edit, @event), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.event_index_path(@socket, :index) %></span>
+      <div
+        class="flex flex-col justify-center items-center w-[100%]"
+        phx-click="close_success_modal"
+      >
+        <p class="bg-gradient-to-l w-[100%] flex flex-col items-center justify-center  mx-auto rounded-md  text-white  uppercase font-semibold py-2 hover:scale-105 ease-in-out transition-all duration-500 cursor-pointer from-green-400  via-green-500 to-black">
+          Close
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="transparent  bg-black z-50 w-[100%] top 0   poppins-regular p-2 hidden md:flex items-center justify-between  mx-auto">
+  <a
+    href="/#swiper"
+    class="text-white  md:text-xl text-xs uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+  >
+    Home
+  </a>
+
+  <div class="flex gap-2 items-center">
+    <a
+      href="/#artists"
+      class="text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+    >
+      Artists
+    </a>
+
+    <a
+      href="/#footer"
+      class="text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+    >
+      Contact
+    </a>
+
+    <%= if @user_signed_in == true do %>
+      <%= link("Log out",
+        to: Routes.user_session_path(@socket, :delete),
+        method: :delete,
+        class:
+          "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      ) %>
+    <% else %>
+      <%= live_redirect("Register",
+        to: Routes.user_registration_path(@socket, :new),
+        class:
+          "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      ) %>
+      <%= live_redirect("Log in",
+        to: Routes.user_session_path(@socket, :new),
+        class:
+          "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      ) %>
+    <% end %>
+  </div>
+</div>
+
+<nav phx-hook="Navbar" id="nav">
+  <div class=" bg-black w-[100%] items-center  md:hidden flex justify-between p-2">
+    <div>
+      <%= live_redirect to: Routes.page_index_path(@socket, :index) do %>
+        <p class="text-3xl poppins-regular text-white">
+          The Kulture Ke
+        </p>
+      <% end %>
+    </div>
+    <button id="toggleButton" class=" flex flex-col  rounded-md gap-2  ">
+      <div class="h-[2px] bg-white w-[40px]" />
+      <div class="h-[2px] bg-white w-[40px]" />
+      <div class="h-[2px] bg-white w-[40px]" />
+    </button>
+  </div>
+
+  <div
+    id="sidebar"
+    class="fixed green top-0 left-0 h-full w-60 z-50 bg-white  text-black transition duration-300 transform -translate-x-full"
+  >
+    <div
+      class="flex flex-col poppins-regular text-xl gap-4 items-start p-4 pt-24 "
+      id="sidebarContent"
+    >
+      <a
+        href="#home"
+        class="     uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+      >
+        Home
+      </a>
+      <a
+        href="#aboutthecompany"
+        class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      >
+        About
+      </a>
+
+      <a
+        href="#companyservices"
+        class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      >
+        Services
+      </a>
+
+      <a
+        href="#booknow"
+        class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      >
+        Book
+      </a>
+      <a
+        href="#ourteam"
+        class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      >
+        Team
+      </a>
+
+      <a
+        href="#contactus"
+        class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      >
+        Contact
+      </a>
+    </div>
+  </div>
+</nav>
+<div
+  class="bg-cover bg-center h-[100vh]  md:h-[100vh] w-[100%]"
+  style="background-image: url('/images/bg.jpeg')"
+>
+  <div class="flex flex-col  items-center  bg-black/50 justify-center h-[100%] w-[100%]">
+    <div class="h-[89%] md:w-[90%] w-[95%] bg-white flex md:flex-row flex-col justify-between">
+      <div class="md:w-[55%] md:h-[100%]">
+        <img src="/images/poster.jpeg" class="w-[100%] md:h-[100%] h-[300px] object-fill" />
+      </div>
+      <div class="md:w-[45%] p-2 h-[100%] flex flex-col gap-2">
+        <img src="/images/logo.png" class=" w-[100px] -rotate-12 h-[100px] object-contain" />
+        <p class="text-4xl font-bold">
+          Event Details
+        </p>
+        <div class="flex gap-2 items-center">
+          <p class="bg-black h-[10px] w-[10px] rotate-45" />
+          <p class="bg-red-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-green-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-yellow-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-black h-[10px] w-[10px] rotate-45" />
+          <p class="bg-red-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-green-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-yellow-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-black h-[10px] w-[10px] rotate-45" />
+          <p class="bg-red-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-green-500 h-[10px] w-[10px] rotate-45" />
+          <p class="bg-yellow-500 h-[10px] w-[10px] rotate-45" />
+        </div>
+
+        <%= @event.description %>
+        <div class="grid gap-8 grid-cols-2 ">
+          <div class="flex flex-col gap-1">
+            <p class="text-xl font-bold">
+              Date
+            </p>
+            <p class="text-xl">
+              <p id="event-date-of-event" phx-hook="EventDate" value={@event.date_of_event}></p>
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-xl font-bold">
+              Venue
+            </p>
+            <p class="text-xl">
+              <%= @event.venue %>
+            </p>
+          </div>
+        </div>
+        <p class="font-semibold">
+          <%= @event.type %> Tickets are going for Ksh <%= @event.price %> /=
+        </p>
+
+        <%!-- <div phx-hook="Map" class="md:h-[50%]  h-[200px] z-0 w-[100%]" id="map"></div> --%>
+
+        <%= live_redirect to: Routes.event_show_path(@socket, :buyticket, @event.id) do %>
+          <button
+            class="bg-gradient-to-l w-[80%] flex flex-col items-center justify-center  mx-auto rounded-md  text-white  uppercase font-semibold py-2 hover:scale-105   ease-in-out transition-all duration-500 cursor-pointer from-green-400  via-green-500 to-green-700"
+            phx-click="buy_ticket"
+          >
+            Buy Ticket
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@ defmodule CtbcWeb.UserAuth do
   # If you want bump or reduce this value, also change
   # the token expiry itself in UserToken.
   @max_age 60 * 60 * 24 * 60
-  @remember_me_cookie "_ctbc_web_user_remember_me"
+  @remember_me_cookie "_Ctbc_web_user_remember_me"
   @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
 
   @doc """
@@ -128,11 +128,11 @@ defmodule CtbcWeb.UserAuth do
   they use the application at all, here would be a good place.
   """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns[:current_user] do
+    if conn.assigns[:current_user] && conn.assigns[:current_user].role == "verified" do
       conn
     else
       conn
-      |> put_flash(:error, "You must log in to access this page.")
+      |> put_flash(:error, "You must log and verified in to access this page.")
       |> maybe_store_return_to()
       |> redirect(to: Routes.user_session_path(conn, :new))
       |> halt()

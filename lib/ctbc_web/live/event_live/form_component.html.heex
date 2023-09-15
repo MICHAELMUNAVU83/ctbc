@@ -1,5 +1,5 @@
 <div>
-  <h2><%= @title %></h2>
+  <h2 class="text-green-500 uppercase text-3xl font-semibold"><%= @title %></h2>
 
   <.form
     let={f}
@@ -7,50 +7,133 @@
     id="event-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
-  
-    <%= label f, :name %>
-    <%= text_input f, :name %>
-    <%= error_tag f, :name %>
-  
-    <%= label f, :description %>
-    <%= text_input f, :description %>
-    <%= error_tag f, :description %>
-  
-    <%= label f, :date_of_event %>
-    <%= text_input f, :date_of_event %>
-    <%= error_tag f, :date_of_event %>
-  
-    <%= label f, :time_of_starting %>
-    <%= text_input f, :time_of_starting %>
-    <%= error_tag f, :time_of_starting %>
-  
-    <%= label f, :time_of_ending %>
-    <%= text_input f, :time_of_ending %>
-    <%= error_tag f, :time_of_ending %>
-  
-    <%= label f, :type %>
-    <%= text_input f, :type %>
-    <%= error_tag f, :type %>
-  
-    <%= label f, :price %>
-    <%= text_input f, :price %>
-    <%= error_tag f, :price %>
-  
-    <%= label f, :venue %>
-    <%= text_input f, :venue %>
-    <%= error_tag f, :venue %>
-  
-    <%= label f, :image %>
-    <%= text_input f, :image %>
-    <%= error_tag f, :image %>
-  
-    <%= label f, :status %>
-    <%= text_input f, :status %>
-    <%= error_tag f, :status %>
-  
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    phx-submit="save"
+  >
+    <%= hidden_input(f, :user_id, value: @current_user.id) %>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :name, class: "font-semibold  text-xl") %>
+        <%= text_input(f, :name,
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :name) %>
+        </p>
+      </div>
+
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :date_of_event, class: "font-semibold  text-xl") %>
+        <%= date_input(f, :date_of_event,
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :date_of_event) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :time_of_starting, class: "font-semibold  text-xl") %>
+        <%= time_input(f, :time_of_starting,
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :time_of_starting) %>
+        </p>
+      </div>
+
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :time_of_ending, class: "font-semibold  text-xl") %>
+        <%= time_input(f, :time_of_ending,
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :time_of_ending) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :type, class: "font-semibold  text-xl") %>
+        <%= select(f, :type, ["Early Bird", "Advanced", "Flash Sale"],
+          prompt: "Select a Type",
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :type) %>
+        </p>
+      </div>
+
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :price, class: "font-semibold  text-xl") %>
+        <%= number_input(f, :price,
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :price) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :venue, class: "font-semibold  text-xl") %>
+        <%= text_input(f, :venue,
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :venue) %>
+        </p>
+      </div>
+
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :status, class: "font-semibold  text-xl") %>
+        <%= select(f, :status, ["Active", "Inactive"],
+          prompt: "Select a type",
+          class:
+            "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :status) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-2  flex-col w-[100%]">
+      <%= label(f, :image, class: "font-semibold  text-xl") %>
+      <%= text_input(f, :image,
+        class:
+          "w-[100%] rounded-md  h-[40px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+      ) %>
+      <p class="pt-5">
+        <%= error_tag(f, :image) %>
+      </p>
+    </div>
+    <div class="flex gap-2  flex-col w-[100%]">
+      <%= label(f, :description, class: "font-semibold  text-xl") %>
+      <%= textarea(f, :description,
+        class:
+          "w-[100%] rounded-md h-[100px]  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+      ) %>
+      <%= error_tag(f, :description) %>
+    </div>
+
+    <div class="flex flex-col mt-4 justify-center items-center gap-2 ">
+      <%= submit("Save",
+        phx_disable_with: "Saving...",
+        class:
+          "bg-green-500 flex gap-2 items-center text-white  rounded-md px-4 py-2 hover:scale-105 transition-all ease-in-out duration-500"
+      ) %>
     </div>
   </.form>
 </div>

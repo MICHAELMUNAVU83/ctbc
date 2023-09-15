@@ -1,5 +1,5 @@
 <div>
-  <h2><%= @title %></h2>
+  <h2 class="text-green-500 uppercase text-3xl font-semibold"><%= @title %></h2>
 
   <.form
     let={f}
@@ -7,62 +7,99 @@
     id="ticket-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
-  
-    <%= label f, :ticketid %>
-    <%= text_input f, :ticketid %>
-    <%= error_tag f, :ticketid %>
-  
-    <%= label f, :quantity %>
-    <%= text_input f, :quantity %>
-    <%= error_tag f, :quantity %>
-  
-    <%= label f, :ticket_type %>
-    <%= text_input f, :ticket_type %>
-    <%= error_tag f, :ticket_type %>
-  
-    <%= label f, :event_type %>
-    <%= text_input f, :event_type %>
-    <%= error_tag f, :event_type %>
-  
-    <%= label f, :status %>
-    <%= text_input f, :status %>
-    <%= error_tag f, :status %>
-  
-    <%= label f, :ticket_holder_name %>
-    <%= text_input f, :ticket_holder_name %>
-    <%= error_tag f, :ticket_holder_name %>
-  
-    <%= label f, :ticket_holder_email %>
-    <%= text_input f, :ticket_holder_email %>
-    <%= error_tag f, :ticket_holder_email %>
-  
-    <%= label f, :phone_number %>
-    <%= text_input f, :phone_number %>
-    <%= error_tag f, :phone_number %>
-  
-    <%= label f, :ticket_added_type %>
-    <%= text_input f, :ticket_added_type %>
-    <%= error_tag f, :ticket_added_type %>
-  
-    <%= label f, :ticket_added_by %>
-    <%= text_input f, :ticket_added_by %>
-    <%= error_tag f, :ticket_added_by %>
-  
-    <%= label f, :promo_code_name %>
-    <%= text_input f, :promo_code_name %>
-    <%= error_tag f, :promo_code_name %>
-  
-    <%= label f, :promo_code_number %>
-    <%= text_input f, :promo_code_number %>
-    <%= error_tag f, :promo_code_number %>
-  
-    <%= label f, :total_cost %>
-    <%= number_input f, :total_cost %>
-    <%= error_tag f, :total_cost %>
-  
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    phx-submit="save"
+  >
+    <%= hidden_input(f, :user_id, value: @current_user.id) %>
+    <%= hidden_input(f, :ticket_added_type, value: "Normal") %>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :event_id, class: "font-semibold  text-xl") %>
+        <%= select(f, :event_id, @events,
+          prompt: "Select An Event",
+          class:
+            "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :event_id) %>
+        </p>
+      </div>
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :quantity, class: "font-semibold  text-xl") %>
+        <%= number_input(f, :quantity,
+          class:
+            "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :quantity) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :status, class: "font-semibold  text-xl") %>
+        <%= select(f, :status, ["Scanned", "Not Scanned"],
+          prompt: "Select Status",
+          class:
+            "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :status) %>
+        </p>
+      </div>
+
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :ticket_type, class: "font-semibold  text-xl") %>
+        <%= select(f, :ticket_type, ["Gate", "Online"],
+          prompt: "Select Type",
+          class:
+            "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :ticket_type) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between w-[100%]">
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :ticket_holder_name, class: "font-semibold  text-xl") %>
+        <%= text_input(f, :ticket_holder_name,
+          class:
+            "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+        ) %>
+        <p class="pt-5">
+          <%= error_tag(f, :ticket_holder_name) %>
+        </p>
+      </div>
+      <div class="flex w-[48%] flex-col gap-1">
+        <%= label(f, :ticket_holder_email, class: "font-semibold  text-xl") %>
+        <%= text_input(f, :ticket_holder_email,
+          class:
+            "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+        ) %>
+        <%= error_tag(f, :ticket_holder_email) %>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2 w-[100%]">
+      <%= label(f, :phone_number, class: "font-semibold  text-xl") %>
+      <%= text_input(f, :phone_number,
+        class:
+          "w-[100%] rounded-md  focus:border-gray-300 focus:ring-gray-300  border-gray-300 border-2 p-2"
+      ) %>
+      <p class="pt-5">
+        <%= error_tag(f, :phone_number) %>
+      </p>
+    </div>
+
+    <div class="flex flex-col justify-center items-center gap-2 ">
+      <%= submit("Save",
+        phx_disable_with: "Saving...",
+        class:
+          "bg-green-500 flex gap-2 items-center text-white  rounded-md px-4 py-2 hover:scale-105 transition-all ease-in-out duration-500"
+      ) %>
     </div>
   </.form>
 </div>

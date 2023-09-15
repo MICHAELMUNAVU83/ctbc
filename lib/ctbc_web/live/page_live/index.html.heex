@@ -1,0 +1,410 @@
+<div
+  phx-hook="Scroll"
+  id="scroll"
+  class="transparent fixed  z-50 w-[100%] top 0   poppins-regular p-4 hidden md:flex items-center justify-between  mx-auto"
+>
+  <a
+    href="#swiper"
+    class="text-white  md:text-xl text-xs uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+  >
+    Home
+  </a>
+
+  <div class="flex gap-2 items-center">
+    <%= live_redirect(to: Routes.event_show_path(@socket, :show, 1)) do %>
+      <p class="text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2">
+        Buy Ticket
+      </p>
+    <% end %>
+    <a
+      href="#artists"
+      class="text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+    >
+      Artists
+    </a>
+
+    <a
+      href="#footer"
+      class="text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+    >
+      Contact
+    </a>
+
+    <%= if @user_signed_in == true do %>
+      <%= link("Log out",
+        to: Routes.user_session_path(@socket, :delete),
+        method: :delete,
+        class:
+          "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      ) %>
+    <% else %>
+      <%= live_redirect("Register",
+        to: Routes.user_registration_path(@socket, :new),
+        class:
+          "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      ) %>
+      <%= live_redirect("Log in",
+        to: Routes.user_session_path(@socket, :new),
+        class:
+          "text-white  md:text-xl text-xs  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+      ) %>
+    <% end %>
+  </div>
+</div>
+
+<div id="navscroll" phx-hook="NavScroll">
+  <nav phx-hook="Navbar" id="nav">
+    <div class="navtransparent fixed  z-50 w-[100%] top 0  md:hidden flex justify-between p-2">
+      <div>
+        <%= live_redirect to: Routes.page_index_path(@socket, :index) do %>
+          <p class="text-3xl poppins-regular text-white">
+            The Kulture Ke
+          </p>
+        <% end %>
+      </div>
+      <button id="toggleButton" class=" flex flex-col  rounded-md gap-2  ">
+        <div class="h-[2px] bg-white w-[40px]" />
+        <div class="h-[2px] bg-white w-[40px]" />
+        <div class="h-[2px] bg-white w-[40px]" />
+      </button>
+    </div>
+
+    <div
+      id="sidebar"
+      class="fixed green top-0 left-0 h-full w-60 z-50 bg-white  text-black transition duration-300 transform -translate-x-full"
+    >
+      <div
+        class="flex flex-col poppins-regular text-xl gap-4 items-start p-4 pt-24 "
+        id="sidebarContent"
+      >
+        <a
+          href="#swiper"
+          class="     uppercase hover:scale-105 transition-all duration-500 ease-in-out  md:ml-8 ml-2"
+        >
+          Home
+        </a>
+
+        <%= live_redirect(to: Routes.event_show_path(@socket, :show, 1)) do %>
+          <p class=" uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2">
+            Buy Ticket
+          </p>
+        <% end %>
+
+        <a
+          href="#artists"
+          class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+        >
+          Artists
+        </a>
+
+        <a
+          href="#footer"
+          class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+        >
+          Contact
+        </a>
+        <a
+          href="#ourteam"
+          class="    uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+        >
+          Team
+        </a>
+
+        <%= if @user_signed_in == true do %>
+          <%= link("Log out",
+            to: Routes.user_session_path(@socket, :delete),
+            method: :delete,
+            class:
+              "  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+          ) %>
+        <% else %>
+          <%= live_redirect("Register",
+            to: Routes.user_registration_path(@socket, :new),
+            class:
+              "  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+          ) %>
+          <%= live_redirect("Log in",
+            to: Routes.user_session_path(@socket, :new),
+            class:
+              "  uppercase hover:scale-105 transition-all duration-500 ease-in-out   md:ml-8 ml-2"
+          ) %>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+</div>
+<div class="h-[100vh]" phx-hook="Swiper" id="swiper">
+  <div class="swiper-wrapper">
+    <div class="jakrata-regular cursor-pointer h-[100%] relative swiper-slide  w-[100%] ">
+      <img src="/images/slider1.jpg" class="w-[100%] h-[100%] object-cover absolute top-0 left-0" />
+      <div class="bg-[#151a22]/70 w-[100%] z-40 h-[100%] absolute top-0 left-0 flex flex-col justify-end">
+        <div class="flex flex-col mb-[10%] justify-center items-center">
+          <div class="md:w-[40%] w-[90%] border-2 border-white p-4 h-[300px] ">
+            <div class="w-[100%] h-[100%] text-white border-2 flex flex-col gap-2 justify-center items-center border-white">
+              <p class="md:text-6xl text-4xl uppercase flex flex-col text-center text-white font-bold">
+                <span class="text-yellow-500 -mt-3">Dancehall</span>
+                <span class="-rotate-12 -mb-2">vs</span>
+                <span class="text-red-500">Gengetone</span>
+              </p>
+              <p class="bg-white h-[1px] text-white w-[70%] mx-auto" />
+              <p class="text-xl">
+                The Kulture Ke
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="countdown"
+          phx-hook="Countdown"
+          class="w-[100%] flex md:flex-row flex-col justify-between"
+        >
+          <div class="md:w-[48%] w-[100%] bg-red-500 text-white">
+            <div class="h-[100px] flex justify-between  w-[100%]">
+              <div class="w-[25%] h-[100px] border-r-2 flex flex-col justify-center items-center text-5xl font-bold border-white">
+                <p id="days"></p>
+                <p class="text-sm">
+                  Days
+                </p>
+              </div>
+              <div class="w-[25%] h-[100px] border-r-2 flex flex-col justify-center items-center text-5xl font-bold border-white">
+                <p id="hours"></p>
+                <p class="text-sm">
+                  Hours
+                </p>
+              </div>
+              <div class="w-[25%] h-[100px] border-r-2 flex flex-col justify-center items-center text-5xl font-bold border-white">
+                <p id="minutes"></p>
+                <p class="text-sm">
+                  Minutes
+                </p>
+              </div>
+              <div class="w-[25%] h-[100px]  flex flex-col justify-center items-center text-5xl font-bold border-white">
+                <p id="seconds"></p>
+                <p class="text-sm">
+                  Seconds
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <%= live_redirect(to: Routes.event_show_path(@socket, :show, 1) , class: "md:w-[48%] w-[100%] py-4  flex flex-row gap-4 text-white justify-center items-center bg-yellow-500") do %>
+            <%= Heroicons.icon("plus", type: "solid", class: "h-[50px] w-[50px]") %>
+
+            <p class="md:text-5xl text-3xl font-bold hover:scale-105 transition-all ease-in-out duration-500  ">
+              BUY TICKET
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="py-40 bg-black w-[100%] flex gap-8 justify-center items-center flex-col">
+  <div class="flex md:flex-row flex-col justify-center gap-16 w-[100%] items-center">
+    <div class="md:w-[40%] w-[90%] h-[300px] border-2 p-8 relative  border-yellow-500">
+      <div class="bg-white/80  absolute -top-6 md:left-[40%] left-[35%]  h-[100px] flex justify-center items-center rotate-45 w-[100px]">
+        <div class="bg-white    h-[80px]  flex flex-col justify-center  w-[80px]">
+          <%= Heroicons.icon("calendar-days",
+            type: "solid",
+            class: "h-12 -rotate-45  mx-auto text-red-500 w-12"
+          ) %>
+        </div>
+      </div>
+      <div class="w-[100%] h-[100%] mt-2 border-2 text-white flex flex-col gap-2 justify-center items-center border-red-500">
+        <p class="md:text-3xl text-2xl text-center font-semibold">
+          Event Date & Time
+        </p>
+        <p class="w-[80%] mx-auto h-[1px] bg-white" />
+        <p>
+          October 14th 2023
+        </p>
+        <p>
+          @2:00pm
+        </p>
+      </div>
+    </div>
+    <div class="md:w-[40%] w-[90%] h-[300px] border-2 p-8 relative  border-yellow-500">
+      <div class="bg-white/80  absolute -top-6 md:left-[40%] left-[35%]  h-[100px] flex justify-center items-center rotate-45 w-[100px]">
+        <div class="bg-white    h-[80px]  flex flex-col justify-center  w-[80px]">
+          <%= Heroicons.icon("map-pin",
+            type: "solid",
+            class: "h-16 -rotate-45  mx-auto text-green-500 w-16"
+          ) %>
+        </div>
+      </div>
+      <div class="w-[100%] mt-2 h-[100%] border-2 text-white flex flex-col gap-2 justify-center items-center border-green-500">
+        <p class="md:text-3xl text-2xl text-center font-semibold">
+          Event Location
+        </p>
+        <p class="w-[80%] mx-auto h-[1px] bg-white" />
+        <p>
+          The MALL
+        </p>
+        <p>
+          Westlands , Nairobi .
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center">
+    <%= live_redirect(to: Routes.event_show_path(@socket, :show, 1)) do %>
+      <div class="bg-green-500 text-white uppercase text-xl cursor-pointer hover:scale-105 transition-all ease-in-out duration-500 px-8 py-4 ">
+        Buy Ticket
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="flex flex-col bg-yellow-400 py-8 w-[100%] gap-4 justify-center items-center">
+  <div class="flex flex-col gap-2 w-[100%] justify-center items-center">
+    <p class="text-3xl font-bold">
+      Event of the Year
+    </p>
+
+    <div class="flex flex-col gap-2 justify-center items-center ">
+      <p class="bg-white h-[1px] w-[80%]" />
+
+      <p class="w-[80%]  text-center break-words">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer gravida velit quis dolor tristiqumsan. Pellentesque elit tortor, adipiscing vel velit in, ultricies fermentum nulla. Donec in urna sem. Nulla facilisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      </p>
+      <p class="bg-white h-[1px] w-[80%]" />
+    </div>
+  </div>
+</div>
+
+<div id="artists" class="w-[100%] flex md:flex-row flex-col justify-between ">
+  <div class="md:w-[50%]">
+    <img src="/images/slider1.jpg" class="w-[100%] h-[60vh] object-cover" />
+  </div>
+  <div class="md:w-[50%] p-8 text-white bg-black h-[60vh] flex flex-col gap-4">
+    <p class="text-2xl">
+      Special Guest Performance
+    </p>
+
+    <p class="text-5xl">
+      Benzema
+    </p>
+    <p class="">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer gravida velit quis dolor tristiqumsan. Pellentesque elit tortor, adipiscing vel velit in, ultricies fermentum nulla. Donec in urna sem. Nulla facilisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer gravida velit quis dolor tristiqumsan. Pellentesque elit tortor, adipiscing vel velit in urna sem. Nulla facilisi.
+    </p>
+  </div>
+</div>
+
+<div class="py-12 bg-black flex flex-col gap-4 w-[100%]">
+  <div class="flex text-white justify-center text-4xl font-bold  uppercase items-center text-center">
+    EVENT  Artists
+  </div>
+</div>
+
+<div class="swiper  bg-black" phx-hook="Swiper" id="swiper">
+  <div class="swiper-wrapper py-8  bg-black">
+    <%= for slide <- @slides do %>
+      <div class=" h-[100%] md:px-12 px-6 hover:scale-105 shadow-2xl transition-all ease-in-out duration-500  swiper-slide  cursor-pointer  w-[100%] ">
+        <img src={slide} class="h-[300px] w-[100%] rounded-t-md object-cover" />
+        <div class="flex flex-col gap-2 items-center justify-center rounded-b-md  bg-white">
+          <p>
+            Artist Name
+          </p>
+          <div class="flex flex-row justify-center gap-2 items-center">
+            <%= Heroicons.icon("musical-note",
+              type: "solid",
+              class: "h-4  mx-auto  w-4"
+            ) %>
+            <p>
+              Gengetone
+            </p>
+          </div>
+
+          <div class="mt-4 grid grid-cols-4">
+            <div class="flex justify-center m-4 items-center">
+              <div class="bg-red-500/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+                <div class="bg-red-500    h-[35px]  flex flex-col justify-center  w-[35px]">
+                  <img src="/images/instagram.png " class="-rotate-45 h-6 mx-auto w-6" />
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center m-4 items-center">
+              <div class="bg-red-500/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+                <div class="bg-red-500    h-[35px]  flex flex-col justify-center  w-[35px]">
+                  <img src="/images/twitter.png " class="-rotate-45 h-6 mx-auto w-6" />
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center m-4 items-center">
+              <div class="bg-red-500/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+                <div class="bg-red-500    h-[35px]  flex flex-col justify-center  w-[35px]">
+                  <img src="/images/whatsapp.png " class="-rotate-45 h-6 mx-auto w-6" />
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center m-4 items-center">
+              <div class="bg-red-500/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+                <div class="bg-red-500    h-[35px]  flex flex-col justify-center  w-[35px]">
+                  <%= Heroicons.icon("phone",
+                    type: "solid",
+                    class: "h-4 -rotate-45  mx-auto text-white w-4"
+                  ) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="bg-black py-8">
+  <div phx-hook="Map" class="h-[50vh]  mx-auto  z-0 w-[80%]" id="map"></div>
+</div>
+<div
+  id="footer"
+  class="bg-red-500 flex flex-col md:justify-center md:items-center gap-2 pt-4 pb-8"
+>
+  <p class="text-white">
+    The Kulture Ke © 2023. All Rights Reserved.
+  </p>
+  <div class="flex flex-col gap-8 md:flex-row items-center  w-[100%] p-4 ">
+    <div class="flex md:w-[30%] gap-4 text-2xl md:justify-center md:items-center">
+      <div class="bg-white/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+        <div class="bg-white    h-[35px]  flex flex-col justify-center  w-[35px]">
+          <%= Heroicons.icon("phone",
+            type: "solid",
+            class: "h-4 -rotate-45  mx-auto text-black w-4"
+          ) %>
+        </div>
+      </div>
+      <p class="text-white">
+        072236789
+      </p>
+    </div>
+    <div class="flex md:w-[30%] gap-4 text-2xl  md:justify-center md:items-center">
+      <div class="bg-white/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+        <div class="bg-white    h-[35px]  flex flex-col justify-center  w-[35px]">
+          <%= Heroicons.icon("envelope",
+            type: "solid",
+            class: "h-4 -rotate-45  mx-auto text-black w-4"
+          ) %>
+        </div>
+      </div>
+      <p class="text-white">
+        Ctbc@gmail.com
+      </p>
+    </div>
+    <div class="flex md:w-[30%] gap-4 md:justify-center text-2xl md:items-center">
+      <div class="bg-white/20    h-[50px] flex justify-center items-center rotate-45 w-[50px]">
+        <div class="bg-white    h-[35px]  flex flex-col justify-center  w-[35px]">
+          <%= Heroicons.icon("x-mark",
+            type: "solid",
+            class: "h-4 -rotate-45  mx-auto text-black w-4"
+          ) %>
+        </div>
+      </div>
+      <p class="text-white">
+        @Ctbc
+      </p>
+    </div>
+  </div>
+</div>

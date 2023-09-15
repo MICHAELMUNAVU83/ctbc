@@ -1,0 +1,105 @@
+<div class="flex flex-col w-[100%] gap-2">
+  <div class="flex flex-col gap-1">
+    <div class="flex flex-row items-center justify-between w-[100%]">
+      <p>
+        You have a total of <%= @count %> Payments made
+      </p>
+    </div>
+  </div>
+  <div class="flex justify-between">
+    <div class="w-[60%] flex flex-col gap-1">
+      <p>
+        Search by any
+      </p>
+      <.form let={f} for={@changeset} class="w-[100%]" phx_change="search">
+        <%= text_input(f, :search,
+          placeholder: "Search by phone number of transaction code",
+          class:
+            "w-[100%] rounded-md border-transparent focus:border-transparent focus:ring-0  border-gray-300 border-2 p-2"
+        ) %>
+      </.form>
+    </div>
+
+    <div class="w-[22%] flex flex-col gap-1">
+      <p>
+        Filter Successful
+      </p>
+
+      <.form let={f} for={@changeset} class="w-[100%]" phx_change="filter_by_success">
+        <%= select(f, :success, [{"Successful", true}, {"Failed", false}],
+          prompt: "Filter by success",
+          class:
+            "w-[100%] rounded-md border-transparent focus:border-transparent focus:ring-0  border-gray-300 border-2 p-2 "
+        ) %>
+      </.form>
+    </div>
+  </div>
+
+  <div class="bg-white h-[60vh] flex justify-between flex-col  rounded-xl p-4 overflow-y-scroll">
+    <table class="w-[100%]">
+      <thead class="border-b-2  border-black">
+        <tr>
+          <th class="p-2 font-semibold text-gray-700">Number</th>
+          <th class="p-2 font-semibold text-gray-700">Transaction Code</th>
+          <th class="p-2 font-semibold text-gray-700">Amount</th>
+
+          <th class="p-2 font-semibold text-gray-700">Success</th>
+        </tr>
+      </thead>
+      <tbody id="tickets">
+        <%= for mpesa_transaction <- @mpesa_transactions do %>
+          <tr
+            id={"mpesa_transaction-#{mpesa_transaction.id}"}
+            class="border-b-[1px] cursor-pointer text-center hover:bg-blue-100/50 transition-all ease-in-out duration-500  border-black"
+          >
+            <td class="p-1"><%= mpesa_transaction.transaction_reference %></td>
+            <td class="p-1"><%= mpesa_transaction.transaction_code %></td>
+            <td class="p-1"><%= mpesa_transaction.amount %></td>
+            <td class="p-1"><%= mpesa_transaction.success %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="flex flex-wrap flex-row p-2">
+      <%= if @page_number > 1 do %>
+        <%= live_patch(
+            to: Routes.payment_index_path(@socket, :index, page: @page_number - 1),
+            class: "pagination-link"
+          ) do %>
+          <div class="flex gap-2 items-center ">
+            Previous
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= for idx <-  Enum.to_list(1..@total_pages) do %>
+        <%= live_patch(
+            to: Routes.payment_index_path(@socket, :index, page: idx),
+            class: "pagination-link"
+          ) do %>
+          <%= if @page_number == idx do %>
+            <p class="bg-green-500    text-white px-2 border-white border-transparent ">
+              <%= idx %>
+            </p>
+          <% else %>
+            <p class="px-2   border-white">
+              <%= idx %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%= if @page_number < @total_pages do %>
+        <%= live_patch(
+            to: Routes.payment_index_path(@socket, :index, page: @page_number + 1),
+            class: "pagination-link"
+          )  do %>
+          <div class="flex gap-2 items-center ">
+            Next
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

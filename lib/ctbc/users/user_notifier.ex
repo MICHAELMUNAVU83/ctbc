@@ -4,11 +4,11 @@ defmodule Ctbc.Users.UserNotifier do
   alias Ctbc.Mailer
 
   # Delivers the email using the application mailer.
-  defp deliver(recipient, subject, body) do
+  def deliver(recipient, subject, body) do
     email =
       new()
       |> to(recipient)
-      |> from({"Ctbc", "contact@example.com"})
+      |> from({"Ctbc", "thekultureke@gmail.com"})
       |> subject(subject)
       |> text_body(body)
 
@@ -23,7 +23,7 @@ defmodule Ctbc.Users.UserNotifier do
   def deliver_confirmation_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
 
-    ==============================
+
 
     Hi #{user.email},
 
@@ -33,7 +33,6 @@ defmodule Ctbc.Users.UserNotifier do
 
     If you didn't create an account with us, please ignore this.
 
-    ==============================
     """)
   end
 
@@ -43,7 +42,7 @@ defmodule Ctbc.Users.UserNotifier do
   def deliver_reset_password_instructions(user, url) do
     deliver(user.email, "Reset password instructions", """
 
-    ==============================
+
 
     Hi #{user.email},
 
@@ -53,7 +52,7 @@ defmodule Ctbc.Users.UserNotifier do
 
     If you didn't request this change, please ignore this.
 
-    ==============================
+
     """)
   end
 
@@ -63,7 +62,7 @@ defmodule Ctbc.Users.UserNotifier do
   def deliver_update_email_instructions(user, url) do
     deliver(user.email, "Update email instructions", """
 
-    ==============================
+
 
     Hi #{user.email},
 
@@ -73,7 +72,7 @@ defmodule Ctbc.Users.UserNotifier do
 
     If you didn't request this change, please ignore this.
 
-    ==============================
+
     """)
   end
 end

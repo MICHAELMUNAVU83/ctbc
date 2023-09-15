@@ -14,33 +14,19 @@
 <% end %>
 
 <ul>
-
   <li>
     <strong>Phone number:</strong>
     <%= @mpesa.phone_number %>
   </li>
 
   <li>
-    <strong>No of tickets:</strong>
-    <%= @mpesa.no_of_tickets %>
+    <strong>No:</strong>
+    <%= @mpesa.no %>
   </li>
-
-  <li>
-    <strong>Email:</strong>
-    <%= @mpesa.email %>
-  </li>
-
-  <li>
-    <strong>Deliver ticket by:</strong>
-    <%= @mpesa.deliver_ticket_by %>
-  </li>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @mpesa.name %>
-  </li>
-
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.mpesa_show_path(@socket, :edit, @mpesa), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.mpesa_index_path(@socket, :index) %></span>
+<span>
+  <%= live_patch("Edit", to: Routes.mpesa_show_path(@socket, :edit, @mpesa), class: "button") %>
+</span>
+|
+<span><%= live_redirect("Back", to: Routes.mpesa_index_path(@socket, :index)) %></span>

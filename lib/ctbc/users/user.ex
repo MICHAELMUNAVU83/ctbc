@@ -9,13 +9,7 @@ defmodule Ctbc.Users.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :password_confirmation, :string
-
     timestamps()
-  end
-
-  def changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:email, :password, :role, :password_confirmation])
   end
 
   @doc """
@@ -37,10 +31,15 @@ defmodule Ctbc.Users.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation, :role])
+    |> cast(attrs, [:email, :password, :role, :password_confirmation])
     |> validate_confirmation(:password, message: "Passwords do not match")
     |> validate_email()
     |> validate_password(opts)
+  end
+
+  def changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email, :password, :role, :password_confirmation])
   end
 
   defp validate_email(changeset) do
